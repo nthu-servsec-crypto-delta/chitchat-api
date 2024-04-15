@@ -4,7 +4,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     env:
-      BUNDLE_ONLY: rubocop # install rubocop only
+      BUNDLE_ONLY: rubocop # install rubocop group only
     steps:
     - uses: actions/checkout@v4
     - name: Set up ruby with .ruby-version

@@ -4,6 +4,7 @@ AllCops:
   NewCops: enable         # enable new upcoming cops for rubocop
   Exclude:
     - _snippets/**/*
+    - vendor/**/*
 
 Metrics/BlockLength:
   Enabled: true

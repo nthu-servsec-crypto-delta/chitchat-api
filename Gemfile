@@ -11,13 +11,19 @@ gem 'roda', '~>3.1'
 gem 'rbnacl', '~>7.1'
 
 # Testing
-gem 'minitest'
-gem 'minitest-rg'
-gem 'rack-test'
+group :test do
+  gem 'minitest'
+  gem 'minitest-rg'
+  gem 'rack-test'
+end
 
 # Debugging
-gem 'pry'
-gem 'rerun'
+group :development do
+  gem 'pry'
+  gem 'rerun'
+end
 
 # Quality
-gem 'rubocop'
+group :rubocop do
+  gem 'rubocop'
+end
