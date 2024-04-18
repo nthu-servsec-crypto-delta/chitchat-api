@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module LocationApi
+module ChitChatApi
   # User Location Model
   class Location
     def initialize(username, longtidude, latitude)

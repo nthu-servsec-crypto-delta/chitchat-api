@@ -3,7 +3,7 @@
 require 'roda'
 require_relative '../models/location'
 
-module LocationApi
+module ChitChatApi
   # Main App
   class App < Roda
     plugin :json
