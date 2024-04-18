@@ -19,7 +19,7 @@ module ChitChat
 
     attr_reader :id, :longitude, :latitude, :message, :created_at
 
-    def to_json(options = {})
+    def to_json(_options = {})
       {
         id: @id,
         longitude: @longitude,
@@ -31,7 +31,7 @@ module ChitChat
 
     # File store must be setup once when application runs
     def self.setup
-      Dir.mkdir(ChitChat::STORE_DIR) unless Dir.exist? ChitChat::STORE_DIR
+      FileUtils.mkdir_p(ChitChat::STORE_DIR)
     end
 
     # Stores postit in file store
