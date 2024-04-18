@@ -8,7 +8,7 @@ require 'yaml'
 require_relative '../app/controllers/app'
 
 def app
-  ChitChatApi::App
+  ChitChat::Api
 end
 
 describe 'Location API test' do
