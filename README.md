@@ -1,5 +1,5 @@
-# mock-location-api
-This is the mock location API using file as datastore.
+# chitchat-api
+This is the ChitChat API.
 
 ## API Spec
 WIP
