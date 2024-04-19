@@ -10,6 +10,7 @@ module ChitChat
   class Api < Roda
     plugin :environments
     plugin :halt
+    plugin :json
 
     configure do
       Postit.setup
@@ -18,7 +19,7 @@ module ChitChat
     route do |routing| # rubocop:disable Metrics/BlockLength
       routing.root do
         response.status = 200
-        { message: 'ChitChatAPI up at /api/v1' }.to_json
+        { message: 'ChitChatAPI up at /api/v1' }
       end
 
       routing.on 'api' do
@@ -27,16 +28,15 @@ module ChitChat
             # GET api/v1/postits/[id]
             routing.get String do |id|
               response.status = 200
-              Postit.find(id).to_json
+              Postit.find(id).to_h
             rescue StandardError
-              routing.halt 404, { message: 'Postit not found' }.to_json
+              routing.halt 404, { message: 'Postit not found' }
             end
 
             # GET api/v1/postits
             routing.get do
               response.status = 200
-              output = { postit_ids: Postit.all }
-              JSON.pretty_generate(output)
+              { postit_ids: Postit.all }
             end
 
             # POST api/v1/postits
@@ -46,9 +46,9 @@ module ChitChat
 
               if new_postit.save
                 response.status = 201
-                { message: 'Postit created', id: new_postit.id }.to_json
+                { message: 'Postit created', id: new_postit.id }
               else
-                routing.halt 400, { message: 'Could not create postit' }.to_json
+                routing.halt 400, { message: 'Could not create postit' }
               end
             end
           end
