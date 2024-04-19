@@ -20,13 +20,17 @@ module ChitChat
     attr_reader :id, :longitude, :latitude, :message, :created_at
 
     def to_json(_options = {})
+      to_map.to_json
+    end
+
+    def to_map
       {
         id: @id,
         longitude: @longitude,
         latitude: @latitude,
         message: @message,
         created_at: @created_at
-      }.to_json
+      }
     end
 
     # File store must be setup once when application runs
