@@ -20,10 +20,10 @@ module ChitChat
     attr_reader :id, :longitude, :latitude, :message, :created_at
 
     def to_json(_options = {})
-      to_map.to_json
+      to_h.to_json
     end
 
-    def to_map
+    def to_h
       {
         id: @id,
         longitude: @longitude,

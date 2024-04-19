@@ -28,7 +28,7 @@ module ChitChat
             # GET api/v1/postits/[id]
             routing.get String do |id|
               response.status = 200
-              Postit.find(id).to_map
+              Postit.find(id).to_h
             rescue StandardError
               routing.halt 404, { message: 'Postit not found' }
             end
