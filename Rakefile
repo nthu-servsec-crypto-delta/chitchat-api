@@ -3,6 +3,36 @@
 require 'rake/testtask'
 require './require_app'
 
+task :default do
+  puts `rake -T`
+end
+
+desc 'Tests API specs only'
+task :api_spec do
+  sh 'ruby spec/api_spec.rb'
+end
+
+desc 'Test all the specs'
+Rake::TestTask.new(:spec) do |t|
+  t.pattern = 'spec/*_spec.rb'
+  t.warning = false
+end
+
+desc 'Runs rubocop on tested code'
+task :style => [:spec, :audit] do
+  sh 'rubocop .'
+end
+
+desc 'Update vulnerabilities lit and audit gems'
+task :audit do
+  sh 'bundle audit check --update'
+end
+
+desc 'Checks for release'
+task :release? => [:spec, :style, :audit] do
+  puts "\nReady for release!"
+end
+
 task :print_env do
   puts "Environment: #{ENV['RACK_ENV'] || 'development'}"
 end
