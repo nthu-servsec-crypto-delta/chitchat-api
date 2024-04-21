@@ -9,7 +9,7 @@ module ChitChat
     plugin :halt
     plugin :json
 
-    route do |routing| # rubocop:disable Metrics/BlockLength
+    route do |routing|
       routing.root do
         response.status = 200
         { message: 'ChitChatAPI up at /api/v1' }
