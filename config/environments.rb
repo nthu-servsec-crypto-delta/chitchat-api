@@ -2,6 +2,7 @@
 
 require 'roda'
 require 'figaro'
+require 'sequel'
 
 module ChitChat
   # Configuration for the API
@@ -18,9 +19,10 @@ module ChitChat
     # Make the environment variables accessible to other classes
     def self.config = Figaro.env
 
-    STORE_DIR = ENV.delete('STORE_DIR')
-    FileUtils.mkdir_p(STORE_DIR)
-    def self.STORE_DIR = STORE_DIR
+    # Connect and make the database accessible to other classes
+    db_url = ENV.delete('DATABASE_URL')
+    DB = Sequel.connect("#{db_url}?encoding=utf8")
+    def self.DB = DB # rubocop:disable Naming/MethodName
 
     configure :development, :test do
       require 'pry'

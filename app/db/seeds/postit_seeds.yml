@@ -1,7 +1,5 @@
 ---
-- latitude: 25.032969
-  longitude: 121.565414
+- location: "{\"latitude\":25.032969,\"longitude\":121.565414}"
   message: "Hello, I'm in Taipei!"
-- latitude: 24.813829
-  longitude: 120.967484
+- location: "{\"latitude\":24.813829,\"longitude\":120.967484}"
   message: "Hello, I'm in Hsinchu!"

@@ -12,14 +12,20 @@ def app
   ChitChat::Api
 end
 
+def wipe_database
+  app.DB[:postits].delete
+end
+
 DATA = YAML.safe_load_file('app/db/seeds/postit_seeds.yml')
 
 describe 'Test ChitChat Web API' do
   include Rack::Test::Methods
 
   before do
-    # Wipe database before each test
-    Dir.glob("#{ChitChat::Api.STORE_DIR}/*.txt").each { |filename| FileUtils.rm(filename) }
+    wipe_database
+    DATA.each do |postit_data|
+      ChitChat::Postit.create(postit_data)
+    end
   end
 
   it 'root should work' do
@@ -30,23 +36,20 @@ describe 'Test ChitChat Web API' do
 
   describe 'Handle postits' do
     it 'HAPPY: should be able to get list of all postits' do
-      ChitChat::Postit.new(DATA[0]).save
-      ChitChat::Postit.new(DATA[1]).save
-
       get '/api/v1/postits'
+      _(last_response.status).must_equal 200
+
       result = JSON.parse(last_response.body)
       _(result['postit_ids'].count).must_equal 2
     end
 
     it 'HAPPY: should be able to get details of a single postit' do
-      ChitChat::Postit.new(DATA[1]).save
-      id = Dir.glob("#{ChitChat::Api.STORE_DIR}/*.txt").first.split(%r{[/.]})[3]
-
-      get "/api/v1/postits/#{id}"
+      postit = ChitChat::Postit.first
+      get "/api/v1/postits/#{postit.id}"
       result = JSON.parse last_response.body
 
       _(last_response.status).must_equal 200
-      _(result['id']).must_equal id
+      _(result['id']).must_equal postit.id
     end
 
     it 'SAD: should return error if unknown postit requested' do

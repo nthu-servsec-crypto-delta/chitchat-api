@@ -15,35 +15,38 @@ module ChitChat
         { message: 'ChitChatAPI up at /api/v1' }
       end
 
-      routing.on 'api' do
-        routing.on 'v1' do
-          routing.on 'postits' do
-            # GET api/v1/postits/[id]
-            routing.get String do |id|
-              response.status = 200
-              Postit.find(id).to_h
-            rescue StandardError
-              routing.halt 404, { message: 'Postit not found' }
-            end
+      @api_root = 'api/v1'
+      routing.on @api_root do
+        routing.on 'postits' do
+          # GET api/v1/postits/[id]
+          routing.get String do |postit_id|
+            response.status = 200
+            postit = Postit.first(id: postit_id)
+            postit ? postit.to_json : raise('Postit not found')
+          rescue StandardError => e
+            routing.halt 404, { message: e.message }
+          end
 
-            # GET api/v1/postits
-            routing.get do
-              response.status = 200
-              { postit_ids: Postit.all }
-            end
+          # GET api/v1/postits
+          routing.get do
+            response.status = 200
+            { postit_ids: Postit.all }
+          end
 
-            # POST api/v1/postits
-            routing.post do
-              new_data = JSON.parse(routing.body.read)
-              new_postit = Postit.new(new_data)
+          # POST api/v1/postits
+          routing.post do
+            new_data = JSON.parse(routing.body.read)
+            new_postit = Postit.create(new_data)
 
-              if new_postit.save
-                response.status = 201
-                { message: 'Postit created', id: new_postit.id }
-              else
-                routing.halt 400, { message: 'Could not create postit' }
-              end
+            if new_postit
+              response.status = 201
+              { message: 'Postit created', id: new_postit.id }
+            else
+              routing.halt 400, { message: 'Could not create postit' }
             end
+          rescue StandardError => e
+            puts e.message
+            routing.halt 500, { message: 'Database error' }
           end
         end
       end

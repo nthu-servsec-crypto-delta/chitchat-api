@@ -4,14 +4,25 @@ AllCops:
   NewCops: enable         # enable new upcoming cops for rubocop
   Exclude:
     - _snippets/**/*
-    - vendor/**/*
 
+# ignore block length where unavoidable (e.g., framework requires it)
 Metrics/BlockLength:
   Enabled: true
   Exclude:
-    - spec/**/*
+    - Rakefile # Rake namespaces produce large blocks
 
 Security/YAMLLoad:
   Enabled: true
   Exclude:
     - spec/**/*
+
+Style/HashSyntax:
+  Enabled: true
+  Exclude:
+    - Rakefile
+
+Style/SymbolArray:
+  Enabled: true
+  Exclude:
+    - Rakefile
+    - app/db/migrations/*.rb
