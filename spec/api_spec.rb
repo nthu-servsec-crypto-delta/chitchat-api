@@ -5,8 +5,8 @@ require 'minitest/rg'
 require 'rack/test'
 require 'yaml'
 
-require_relative '../app/controllers/app'
-require_relative '../app/models/postit'
+require_relative '../require_app'
+require_app
 
 def app
   ChitChat::Api
@@ -19,7 +19,7 @@ describe 'Test ChitChat Web API' do
 
   before do
     # Wipe database before each test
-    Dir.glob("#{ChitChat::STORE_DIR}/*.txt").each { |filename| FileUtils.rm(filename) }
+    Dir.glob("#{ChitChat::Api.STORE_DIR}/*.txt").each { |filename| FileUtils.rm(filename) }
   end
 
   it 'root should work' do
@@ -40,7 +40,7 @@ describe 'Test ChitChat Web API' do
 
     it 'HAPPY: should be able to get details of a single postit' do
       ChitChat::Postit.new(DATA[1]).save
-      id = Dir.glob("#{ChitChat::STORE_DIR}/*.txt").first.split(%r{[/.]})[3]
+      id = Dir.glob("#{ChitChat::Api.STORE_DIR}/*.txt").first.split(%r{[/.]})[3]
 
       get "/api/v1/postits/#{id}"
       result = JSON.parse last_response.body

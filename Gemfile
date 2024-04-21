@@ -7,6 +7,9 @@ gem 'json'
 gem 'puma', '~>6.1'
 gem 'roda', '~>3.1'
 
+# Configuration
+gem 'figaro', '~>1.2'
+
 # Security
 gem 'rbnacl', '~>7.1'
 

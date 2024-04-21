@@ -3,18 +3,11 @@
 require 'roda'
 require 'json'
 
-require_relative '../models/postit'
-
 module ChitChat
   # Main App
   class Api < Roda
-    plugin :environments
     plugin :halt
     plugin :json
-
-    configure do
-      Postit.setup
-    end
 
     route do |routing| # rubocop:disable Metrics/BlockLength
       routing.root do

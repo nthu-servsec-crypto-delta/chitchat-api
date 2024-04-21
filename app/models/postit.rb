@@ -5,8 +5,6 @@ require 'base64'
 require 'rbnacl'
 
 module ChitChat
-  STORE_DIR = 'app/db/store'
-
   # User Location Model
   class Postit
     def initialize(new_postit)
@@ -33,25 +31,20 @@ module ChitChat
       }
     end
 
-    # File store must be setup once when application runs
-    def self.setup
-      FileUtils.mkdir_p(ChitChat::STORE_DIR)
-    end
-
     # Stores postit in file store
     def save
-      File.write("#{ChitChat::STORE_DIR}/#{id}.txt", to_json)
+      File.write("#{Api.STORE_DIR}/#{id}.txt", to_json)
     end
 
     # Query method to find one postit
     def self.find(find_id)
-      postit_file = File.read("#{ChitChat::STORE_DIR}/#{find_id}.txt")
+      postit_file = File.read("#{Api::STORE_DIR}/#{find_id}.txt")
       Postit.new(JSON.parse(postit_file))
     end
 
     def self.all
-      Dir.glob("#{ChitChat::STORE_DIR}/*.txt").map do |file|
-        file.match(%r{#{Regexp.quote(ChitChat::STORE_DIR)}/(.*)\.txt})[1]
+      Dir.glob("#{Api::STORE_DIR}/*.txt").map do |file|
+        file.match(%r{#{Regexp.quote(Api::STORE_DIR)}/(.*)\.txt})[1]
       end
     end
 
