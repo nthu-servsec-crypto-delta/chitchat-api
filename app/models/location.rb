@@ -23,6 +23,11 @@ module ChitChat
       }
     end
 
+    # For Sequel serialization
+    def self.to_json(location)
+      location.to_json
+    end
+
     def self.from_json(json)
       data = JSON.parse(json)
       Location.from_h(data)
