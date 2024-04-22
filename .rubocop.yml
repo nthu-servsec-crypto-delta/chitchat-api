@@ -6,6 +6,7 @@ AllCops:
   NewCops: enable         # enable new upcoming cops for rubocop
   Exclude:
     - _snippets/**/*
+    - vendor/**/*
 
 # ignore block length where unavoidable (e.g., framework requires it)
 Metrics/BlockLength:
