@@ -4,7 +4,7 @@ require 'json'
 require 'sequel'
 
 module ChitChat
-  # Models a secret document
+  # Postit with location and message
   class Postit < Sequel::Model
     plugin :timestamps
 
