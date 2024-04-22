@@ -20,7 +20,7 @@ end
 
 desc 'Runs rubocop on tested code'
 task :style => [:spec, :audit] do
-  sh 'rubocop .'
+  sh 'rubocop . --parallel'
 end
 
 desc 'Update vulnerabilities lit and audit gems'

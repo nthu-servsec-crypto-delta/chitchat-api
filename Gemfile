@@ -13,6 +13,7 @@ gem 'rake'
 
 # Security
 gem 'rbnacl', '~>7.1'
+gem 'bundler-audit'
 
 # Database
 gem 'hirb'
@@ -37,4 +38,5 @@ end
 # Quality
 group :rubocop do
   gem 'rubocop'
+  gem 'rubocop-performance'
 end
