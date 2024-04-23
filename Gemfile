@@ -12,8 +12,8 @@ gem 'figaro', '~>1.2'
 gem 'rake'
 
 # Security
-gem 'rbnacl', '~>7.1'
 gem 'bundler-audit'
+gem 'rbnacl', '~>7.1'
 
 # Database
 gem 'hirb'

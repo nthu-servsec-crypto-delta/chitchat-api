@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 require 'json'
 
 require 'sequel'
 require 'sequel/plugins/serialization'
 
-require_relative './location'
+require_relative 'location'
 
 Sequel::Plugins::Serialization.register_format(
   :location_s,

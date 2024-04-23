@@ -16,7 +16,7 @@ module ChitChat
       JSON(to_h, options)
     end
 
-    def to_h(options = {})
+    def to_h(_options = {})
       {
         longitude: @longitude,
         latitude: @latitude
@@ -39,7 +39,7 @@ module ChitChat
 
     def distance(location)
       # For simplicity, use Euclidean distance here
-      Math.sqrt((@longitude - location.longitude)**2 + (@latitude - location.latitude)**2)
+      Math.sqrt(((@longitude - location.longitude)**2) + ((@latitude - location.latitude)**2))
     end
 
     def self.distance(location1, location2)
