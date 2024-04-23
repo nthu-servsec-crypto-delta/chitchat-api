@@ -12,6 +12,10 @@ module ChitChat
 
     attr_reader :longitude, :latitude
 
+    def to_s
+      "<long=#{@longitude} lat=#{@latitude}>"
+    end
+
     def to_json(options = {})
       JSON(to_h, options)
     end
