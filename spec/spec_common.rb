@@ -13,3 +13,5 @@ def wipe_database
     app.DB[table].delete
   end
 end
+
+POSTITS_DATA = YAML.safe_load_file('app/db/seeds/postit_seeds.yml')
