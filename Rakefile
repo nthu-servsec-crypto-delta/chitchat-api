@@ -7,6 +7,11 @@ task :default do
   puts `rake -T`
 end
 
+desc 'debug console'
+task :console do
+  sh 'pry -r ./spec/app_test_loader.rb'
+end
+
 desc 'Tests API specs only'
 task :api_spec do
   sh 'ruby spec/api_spec.rb'
