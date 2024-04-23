@@ -15,3 +15,4 @@ def wipe_database
 end
 
 POSTITS_DATA = YAML.safe_load_file('app/db/seeds/postit_seeds.yml')
+EVENTS_DATA = YAML.safe_load_file('app/db/seeds/event_seeds.yml')

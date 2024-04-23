@@ -22,6 +22,11 @@ task :api_spec do
   sh 'ruby spec/postits_spec.rb'
 end
 
+desc 'Tests Event specs only'
+task :api_spec do
+  sh 'ruby spec/events_spec.rb'
+end
+
 desc 'Test all the specs'
 Rake::TestTask.new(:spec) do |t|
   t.pattern = 'spec/*_spec.rb'

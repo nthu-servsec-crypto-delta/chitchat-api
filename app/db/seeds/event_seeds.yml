@@ -1,0 +1,11 @@
+---
+- location:
+    latitude: 25.032969
+    longitude: 121.565414
+  name: "AsiaBSDCon 2024"
+  description: "AsiaBSDCon 2024 in JianTan Youth Activity Center"
+- location: 
+    latitude: 24.813829
+    longitude: 120.967484
+  name: "AIS3"
+  description: "AIS3 in NYCU"
