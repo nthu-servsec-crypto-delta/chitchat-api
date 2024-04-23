@@ -18,12 +18,12 @@ task :api_spec do
 end
 
 desc 'Tests Postit specs only'
-task :api_spec do
+task :postit_spec do
   sh 'ruby spec/postits_spec.rb'
 end
 
 desc 'Tests Event specs only'
-task :api_spec do
+task :event_spec do
   sh 'ruby spec/events_spec.rb'
 end
 
