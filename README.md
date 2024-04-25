@@ -11,6 +11,9 @@ Install required gems through `bundle`.
 bundle install
 ```
 
+## Setup
+Create a `secrets.yml` file in the config folder, see example at `config/secrets.example.yml`
+
 ## Test
 Run database migrations to setup test database
 ```
