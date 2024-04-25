@@ -3,54 +3,83 @@
 require 'roda'
 require 'json'
 
-require_relative '../models/postit'
-
 module ChitChat
   # Main App
   class Api < Roda
-    plugin :environments
     plugin :halt
     plugin :json
 
-    configure do
-      Postit.setup
-    end
-
-    route do |routing| # rubocop:disable Metrics/BlockLength
+    route do |routing|
       routing.root do
         response.status = 200
         { message: 'ChitChatAPI up at /api/v1' }
       end
 
-      routing.on 'api' do
-        routing.on 'v1' do
-          routing.on 'postits' do
-            # GET api/v1/postits/[id]
-            routing.get String do |id|
-              response.status = 200
-              Postit.find(id).to_h
-            rescue StandardError
-              routing.halt 404, { message: 'Postit not found' }
-            end
+      @api_root = 'api/v1'
+      routing.on @api_root do
+        routing.on 'postits' do
+          # GET api/v1/postits/[id]
+          routing.get String do |postit_id|
+            response.status = 200
+            postit = Postit.first(id: postit_id)
+            postit ? postit.to_json : raise('Postit not found')
+          rescue StandardError => e
+            routing.halt 404, { message: e.message }
+          end
 
-            # GET api/v1/postits
-            routing.get do
-              response.status = 200
-              { postit_ids: Postit.all }
-            end
+          # GET api/v1/postits
+          routing.get do
+            response.status = 200
+            { postit_ids: Postit.all }
+          end
 
-            # POST api/v1/postits
-            routing.post do
-              new_data = JSON.parse(routing.body.read)
-              new_postit = Postit.new(new_data)
+          # POST api/v1/postits
+          routing.post do
+            new_data = JSON.parse(routing.body.read)
+            new_postit = Postit.create(new_data)
 
-              if new_postit.save
-                response.status = 201
-                { message: 'Postit created', id: new_postit.id }
-              else
-                routing.halt 400, { message: 'Could not create postit' }
-              end
+            if new_postit
+              response.status = 201
+              { message: 'Postit created', id: new_postit.id }
+            else
+              routing.halt 400, { message: 'Could not create postit' }
             end
+          rescue StandardError => e
+            puts e.message
+            routing.halt 500, { message: 'Database error' }
+          end
+        end
+
+        routing.on 'events' do
+          # GET api/v1/events/[id]
+          routing.get String do |event_id|
+            response.status = 200
+            event = Event.first(id: event_id)
+            event ? event.to_json : raise('Event not found')
+          rescue StandardError => e
+            routing.halt 404, { message: e.message }
+          end
+
+          # GET api/v1/events
+          routing.get do
+            response.status = 200
+            { event_ids: Event.all }
+          end
+
+          # POST api/v1/events
+          routing.post do
+            new_data = JSON.parse(routing.body.read)
+            new_event = Event.create(new_data)
+
+            if new_event
+              response.status = 201
+              { message: 'Event created', id: new_event.id }
+            else
+              routing.halt 400, { message: 'Could not create event' }
+            end
+          rescue StandardError => e
+            puts e.message
+            routing.halt 500, { message: 'Database error' }
           end
         end
       end
