@@ -3,6 +3,7 @@
 require 'roda'
 require 'figaro'
 require 'sequel'
+require 'logger'
 
 module ChitChat
   # Configuration for the API
@@ -24,8 +25,16 @@ module ChitChat
     DB = Sequel.connect("#{db_url}?encoding=utf8")
     def self.DB = DB # rubocop:disable Naming/MethodName
 
+    configure :development, :production do
+      plugin :common_logger, $stdout
+    end
+
+    LOGGER = Logger.new($stderr)
+    def self.logger = LOGGER
+
     configure :development, :test do
       require 'pry'
+      logger.level = Logger::ERROR
     end
   end
 end
