@@ -18,3 +18,9 @@ end
 
 POSTITS_DATA = YAML.safe_load_file('app/db/seeds/postit_seeds.yml')
 EVENTS_DATA = YAML.safe_load_file('app/db/seeds/event_seeds.yml')
+
+MASS_ASSIGNMENT_POSTIT = {
+  'id' => 500,
+  'location' => { 'latitude' => 0.0, 'longitude' => 0.0 },
+  'message' => 'Mass Assignment Attempt'
+}.freeze

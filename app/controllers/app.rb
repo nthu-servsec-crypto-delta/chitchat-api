@@ -44,6 +44,9 @@ module ChitChat
             else
               routing.halt 400, { message: 'Could not create postit' }
             end
+          rescue Sequel::MassAssignmentRestriction
+            Api.logger.warn "MASS-ASSIGNMENT: #{new_data.keys}"
+            routing.halt 400, { message: 'Illegal Attributes' }
           rescue StandardError => e
             puts e.message
             routing.halt 500, { message: 'Database error' }

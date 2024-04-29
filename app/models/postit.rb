@@ -17,6 +17,8 @@ module ChitChat
   class Postit < Sequel::Model
     plugin :timestamps
     plugin :serialization
+    plugin :whitelist_security
+    set_allowed_columns :location, :message
 
     serialize_attributes :location_s, :location
 
