@@ -48,8 +48,8 @@ module ChitChat
             Api.logger.warn "MASS-ASSIGNMENT: #{new_data.keys}"
             routing.halt 400, { message: 'Illegal Attributes' }
           rescue StandardError => e
-            puts e.message
-            routing.halt 500, { message: 'Database error' }
+            Api.logger.error "UNKNOWN ERROR: #{e.message}"
+            routing.halt 500, { message: 'Unknown server error' }
           end
         end
 
