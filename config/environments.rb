@@ -4,6 +4,7 @@ require 'roda'
 require 'figaro'
 require 'sequel'
 require 'logger'
+require './app/lib/secure_db'
 
 module ChitChat
   # Configuration for the API
@@ -35,6 +36,9 @@ module ChitChat
       def self.logger = LOGGER
     end
     # rubocop:enable Lint/ConstantDefinitionInBlock
+
+    # Load crypto keys
+    SecureDB.setup(ENV.delete('DB_KEY'))
 
     configure :development, :test do
       require 'pry'

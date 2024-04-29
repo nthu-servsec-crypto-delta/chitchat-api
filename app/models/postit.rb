@@ -29,5 +29,13 @@ module ChitChat
         }, options
       )
     end
+
+    def message
+      SecureDB.decrypt(message_secure)
+    end
+
+    def message=(plaintext)
+      self.message_secure = SecureDB.encrypt(plaintext)
+    end
   end
 end

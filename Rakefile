@@ -93,3 +93,15 @@ namespace :db do
     puts "Deleted #{db_filename}"
   end
 end
+
+# Add a new key named DB_KEY in secrets.yml before running this task or an error caused by require_app will occur
+# Reason of the error:
+# Rakefile -> require_app -> require('config') -> require environments ->
+# SecureDB.setup(ENV.delete('DB_KEY')) -> cannot find DB_KEY environment variable
+namespace :newkey do
+  desc 'Create sample cryptographic key for database'
+  task :db do
+    require_app('lib')
+    puts "DB_KEY: #{SecureDB.generate_key}"
+  end
+end
