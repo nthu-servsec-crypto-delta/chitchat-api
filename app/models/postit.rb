@@ -4,7 +4,7 @@ require 'json'
 require 'sequel'
 require 'sequel/plugins/serialization'
 
-require_relative 'location'
+require_relative '../objects/location'
 
 Sequel::Plugins::Serialization.register_format(
   :location_s,
