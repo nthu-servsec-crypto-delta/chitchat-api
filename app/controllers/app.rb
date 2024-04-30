@@ -45,7 +45,7 @@ module ChitChat
               routing.halt 400, { message: 'Could not create postit' }
             end
           rescue Sequel::MassAssignmentRestriction
-            Api.logger.warn "MASS-ASSIGNMENT: #{new_data.keys}"
+            Api.logger.warn "MASS-ASSIGNMENT(POSTIT): #{new_data.keys}"
             routing.halt 400, { message: 'Illegal Attributes' }
           rescue StandardError => e
             Api.logger.error "UNKNOWN ERROR: #{e.message}"
@@ -81,7 +81,7 @@ module ChitChat
               routing.halt 400, { message: 'Could not create event' }
             end
           rescue Sequel::MassAssignmentRestriction
-            Api.logger.warn "MASS-ASSIGNMENT: #{new_data.keys}"
+            Api.logger.warn "MASS-ASSIGNMENT(Events): #{new_data.keys}"
             routing.halt 400, { message: 'Illegal Attributes' }
           rescue StandardError => e
             puts e.message
