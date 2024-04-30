@@ -24,3 +24,11 @@ MASS_ASSIGNMENT_POSTIT = {
   'location' => { 'latitude' => 0.0, 'longitude' => 0.0 },
   'message' => 'Mass Assignment Attempt'
 }.freeze
+
+MASS_ASSIGNMENT_EVENT = {
+  'id' => 500,
+  'location' => { 'latitude' => 0.0, 'longitude' => 0.0 },
+  'name' => 'Mass Assignment',
+  'description' => 'Mass Assignment Attempt',
+  'created_at' => '2020-01-01 12:00:00'
+}.freeze
