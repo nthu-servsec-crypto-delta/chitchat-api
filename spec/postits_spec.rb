@@ -42,6 +42,12 @@ describe 'Test postits API' do
     _(last_response.status).must_equal 400
   end
 
+  it 'SECURITY: should prevent SQL injection' do
+    get '/api/v1/postits/1%20or%201%3D1'
+
+    _(last_response.status).must_equal 404
+  end
+
   it 'HAPPY: should be able to create new postits' do
     req_header = { 'CONTENT_TYPE' => 'application/json' }
     post 'api/v1/postits', POSTITS_DATA[1].to_json, req_header
