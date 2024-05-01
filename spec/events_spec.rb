@@ -34,7 +34,7 @@ describe 'Test events API' do
     _(last_response.status).must_equal 404
   end
 
-  it 'SAD: should return error if mass assignment attempted' do
+  it 'SECURITY: should return error if mass assignment attempted' do
     payload = MASS_ASSIGNMENT_EVENT.to_json
     req_header = { 'CONTENT_TYPE' => 'application/json' }
     post 'api/v1/events', payload, req_header
