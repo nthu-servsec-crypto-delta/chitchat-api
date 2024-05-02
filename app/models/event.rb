@@ -5,7 +5,7 @@ require 'json'
 require 'sequel'
 require 'sequel/plugins/serialization'
 
-require_relative 'location'
+require_relative '../objects/location'
 
 Sequel::Plugins::Serialization.register_format(
   :location_s,
@@ -18,7 +18,9 @@ module ChitChat
   class Event < Sequel::Model
     plugin :timestamps
     plugin :serialization
+    plugin :whitelist_security
 
+    set_allowed_columns :name, :description, :location
     serialize_attributes :location_s, :location
 
     def to_json(options = {})

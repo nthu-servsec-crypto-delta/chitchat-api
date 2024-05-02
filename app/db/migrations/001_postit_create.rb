@@ -7,7 +7,7 @@ Sequel.migration do
     create_table(:postits) do
       primary_key :id
 
-      String :message
+      String :message_secure, null: false, default: ''
       String :location, null: false
 
       DateTime :created_at
