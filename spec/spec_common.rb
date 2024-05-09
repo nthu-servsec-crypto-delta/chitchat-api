@@ -11,6 +11,9 @@ require 'yaml'
 require_relative 'app_test_loader'
 
 def wipe_database
+  # Remove table with foreign constraints first
+  app.DB[:accounts_events].delete
+
   app.DB.tables.each do |table|
     app.DB[table].delete
   end
