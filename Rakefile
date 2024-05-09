@@ -47,6 +47,11 @@ task :password_digest_spec do
   sh 'ruby spec/password_digest_spec.rb'
 end
 
+desc 'Tests AddStaffToEvent Service specs only'
+task :service_event_add_staff_spec do
+  sh 'ruby spec/service_event_add_staff_spec.rb'
+end
+
 desc 'Test all the specs'
 Rake::TestTask.new(:spec) do |t|
   t.pattern = 'spec/*_spec.rb'
