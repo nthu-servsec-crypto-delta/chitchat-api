@@ -18,6 +18,7 @@ end
 
 POSTITS_DATA = YAML.safe_load_file('app/db/seeds/postit_seeds.yml')
 EVENTS_DATA = YAML.safe_load_file('app/db/seeds/event_seeds.yml')
+ACCOUNTS_DATA = YAML.safe_load_file('app/db/seeds/account_seeds.yml')
 
 MASS_ASSIGNMENT_POSTIT = {
   'id' => 500,

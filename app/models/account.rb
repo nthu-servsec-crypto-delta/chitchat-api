@@ -12,7 +12,7 @@ module ChitChat
     one_to_many :participate_events, class: :'ChitChat::Participant', key: :id
 
     plugin :whitelist_security
-    set_allowed_columns :username, :email
+    set_allowed_columns :username, :email, :password
 
     plugin :timestamps, update_on_create: true
 
@@ -24,6 +24,10 @@ module ChitChat
           email:
         }, options
       )
+    end
+
+    def password=(new_password)
+      self.password_digest = new_password
     end
   end
 end
