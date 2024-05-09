@@ -17,6 +17,11 @@ task :api_spec do
   sh 'ruby spec/api_spec.rb'
 end
 
+desc 'Tests Account specs only'
+task :api_account_spec do
+  sh 'ruby spec/api_accounts_spec.rb'
+end
+
 desc 'Tests Postit specs only'
 task :postit_spec do
   sh 'ruby spec/postits_spec.rb'
@@ -30,6 +35,11 @@ end
 desc 'Tests Environment specs only'
 task :env_spec do
   sh 'ruby spec/env_spec.rb'
+end
+
+desc 'Tests SecureDB specs only'
+task :secure_db_spec do
+  sh 'ruby spec/secure_db_spec.rb'
 end
 
 desc 'Tests PasswordDigest specs only'
