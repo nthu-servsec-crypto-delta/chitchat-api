@@ -30,7 +30,7 @@ module ChitChat
           # GET api/v1/postits
           routing.get do
             response.status = 200
-            { postit_ids: Postit.all }
+            { postit_ids: Postit.all.map(&:id) }
           end
 
           # POST api/v1/postits
@@ -66,7 +66,7 @@ module ChitChat
           # GET api/v1/events
           routing.get do
             response.status = 200
-            { event_ids: Event.all }
+            { event_ids: Event.all.map(&:id) }
           end
 
           # POST api/v1/events
