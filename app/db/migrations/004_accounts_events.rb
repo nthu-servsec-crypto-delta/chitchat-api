@@ -8,6 +8,7 @@ Sequel.migration do
   end
   change do
     create_join_table(account_id: :accounts, event_id: :events) do
+      # TODO: role column still does not exist
       String :role, null: false, default: 'attendee'
 
       add_constraint(:valid_role) do
