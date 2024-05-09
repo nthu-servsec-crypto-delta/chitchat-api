@@ -9,7 +9,7 @@ module ChitChat
     one_to_many :owned_postits, class: :'ChitChat::Postit', key: :owner_id
     plugin :association_dependencies, owned_postits: :destroy
 
-    many_to_many :events, class: :'ChitChat::Event', key: :id
+    many_to_many :events, class: :'ChitChat::Event', key: :account_id
 
     plugin :whitelist_security
     set_allowed_columns :username, :email, :password

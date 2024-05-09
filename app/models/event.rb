@@ -16,7 +16,7 @@ Sequel::Plugins::Serialization.register_format(
 module ChitChat
   # Event Model
   class Event < Sequel::Model
-    many_to_many :accounts, class: :'ChitChat::Account', key: :id
+    many_to_many :accounts, class: :'ChitChat::Account', key: :event_id
 
     plugin :timestamps
     plugin :serialization
