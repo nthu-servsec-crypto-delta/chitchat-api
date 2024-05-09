@@ -11,6 +11,7 @@ module KeyStretch
 
     hasher = RbNaCl::PasswordHash::Argon2.new(opslimit, memlimit, digest_size)
 
+    # salt is included in the digest
     hasher.digest_str(password)
   end
 
