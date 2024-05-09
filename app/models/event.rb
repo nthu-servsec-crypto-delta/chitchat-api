@@ -16,6 +16,8 @@ Sequel::Plugins::Serialization.register_format(
 module ChitChat
   # Event Model
   class Event < Sequel::Model
+    one_to_many :participants, class: :'ChitChat::Participant', key: :id
+
     plugin :timestamps
     plugin :serialization
     plugin :whitelist_security
