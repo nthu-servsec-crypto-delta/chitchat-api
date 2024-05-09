@@ -40,8 +40,8 @@ end
 
 def add_participants
   PARTICIPANTS_INFO.each do |participant|
-    account = ChitChat::Account.first(username: participant['username'])
-    event = ChitChat::Event.first(name: participant['eventname'])
+    ChitChat::Account.first(username: participant['username'])
+    ChitChat::Event.first(name: participant['eventname'])
     # account.add_event(event, role: participant['role'])
   end
 end
