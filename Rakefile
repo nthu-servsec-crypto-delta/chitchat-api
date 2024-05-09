@@ -107,6 +107,22 @@ namespace :db do
     FileUtils.rm(db_filename)
     puts "Deleted #{db_filename}"
   end
+
+  task :reset_seeds => [:load, :load_models] do
+    @app.DB[:schema_seeds].delete if @app.DB.tables.include?(:schema_seeds)
+    ChitChat::Account.dataset.destroy
+  end
+
+  desc 'Seeds the development database'
+  task :seed => [:load, :load_models] do
+    require 'sequel/extensions/seed'
+    Sequel::Seed.setup(:development)
+    Sequel.extension :seed
+    Sequel::Seeder.apply(@app.DB, 'app/db/seeds')
+  end
+
+  desc 'Delete all data and reseed'
+  task reseed: [:reset_seeds, :seed]
 end
 
 # Add a new key named DB_KEY in secrets.yml before running this task or an error caused by require_app will occur
