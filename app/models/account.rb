@@ -27,7 +27,11 @@ module ChitChat
     end
 
     def password=(new_password)
-      self.password_digest = new_password
+      self.password_digest = PasswordDigest.digest(new_password)
+    end
+
+    def password?(input)
+      PasswordDigest.from_digest(password_digest).correct?(input)
     end
   end
 end
