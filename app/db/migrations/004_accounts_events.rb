@@ -7,12 +7,7 @@ Sequel.migration do
     extension(:constraint_validations)
   end
   change do
-    create_table(:participants) do
-      foreign_key :participant_id, :accounts
-      foreign_key :event_id, :events
-
-      primary_key [:participant_id, :event_id], name: :id
-
+    create_join_table(account_id: :accounts, event_id: :events) do
       String :role, null: false, default: 'attendee'
 
       add_constraint(:valid_role) do
