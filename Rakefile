@@ -32,6 +32,11 @@ task :env_spec do
   sh 'ruby spec/env_spec.rb'
 end
 
+desc 'Tests PasswordDigest specs only'
+task :password_digest_spec do
+  sh 'ruby spec/password_digest_spec.rb'
+end
+
 desc 'Test all the specs'
 Rake::TestTask.new(:spec) do |t|
   t.pattern = 'spec/*_spec.rb'
