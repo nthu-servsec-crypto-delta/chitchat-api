@@ -16,7 +16,7 @@ describe 'Test postits API' do
     _(last_response.status).must_equal 200
 
     result = JSON.parse(last_response.body)
-    _(result['postit_ids'].count).must_equal 2
+    _(result['postit_ids'].count).must_equal 3
   end
 
   it 'HAPPY: should be able to get details of a single postit' do

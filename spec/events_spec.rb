@@ -16,7 +16,7 @@ describe 'Test events API' do
     _(last_response.status).must_equal 200
 
     result = JSON.parse(last_response.body)
-    _(result['event_ids'].count).must_equal 2
+    _(result['event_ids'].count).must_equal 4
   end
 
   it 'HAPPY: should be able to get details of a single event' do
