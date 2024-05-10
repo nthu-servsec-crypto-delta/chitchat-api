@@ -12,9 +12,7 @@ require_relative 'app_test_loader'
 
 def wipe_database
   # Remove table with foreign constraints first
-  app.DB[:accounts_events].delete
-
-  app.DB.tables.each do |table|
+  app.DB.tables.sort_by { |table| -app.DB.foreign_key_list(table).length }.each do |table|
     app.DB[table].delete
   end
 end
