@@ -17,6 +17,11 @@ task :api_spec do
   sh 'ruby spec/api_spec.rb'
 end
 
+desc 'Tests Account specs only'
+task :api_account_spec do
+  sh 'ruby spec/api_accounts_spec.rb'
+end
+
 desc 'Tests Postit specs only'
 task :postit_spec do
   sh 'ruby spec/postits_spec.rb'
@@ -30,6 +35,21 @@ end
 desc 'Tests Environment specs only'
 task :env_spec do
   sh 'ruby spec/env_spec.rb'
+end
+
+desc 'Tests SecureDB specs only'
+task :secure_db_spec do
+  sh 'ruby spec/secure_db_spec.rb'
+end
+
+desc 'Tests PasswordDigest specs only'
+task :password_digest_spec do
+  sh 'ruby spec/password_digest_spec.rb'
+end
+
+desc 'Tests AddStaffToEvent Service specs only'
+task :service_event_add_staff_spec do
+  sh 'ruby spec/service_event_add_staff_spec.rb'
 end
 
 desc 'Test all the specs'
@@ -92,6 +112,22 @@ namespace :db do
     FileUtils.rm(db_filename)
     puts "Deleted #{db_filename}"
   end
+
+  task :reset_seeds => [:load, :load_models] do
+    @app.DB[:schema_seeds].delete if @app.DB.tables.include?(:schema_seeds)
+    ChitChat::Account.dataset.destroy
+  end
+
+  desc 'Seeds the development database'
+  task :seed => [:load, :load_models] do
+    require 'sequel/extensions/seed'
+    Sequel::Seed.setup(:development)
+    Sequel.extension :seed
+    Sequel::Seeder.apply(@app.DB, 'app/db/seeds')
+  end
+
+  desc 'Delete all data and reseed'
+  task reseed: [:reset_seeds, :seed]
 end
 
 # Add a new key named DB_KEY in secrets.yml before running this task or an error caused by require_app will occur

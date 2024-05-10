@@ -11,13 +11,15 @@ require 'yaml'
 require_relative 'app_test_loader'
 
 def wipe_database
-  app.DB.tables.each do |table|
+  # Remove table with foreign constraints first
+  app.DB.tables.sort_by { |table| -app.DB.foreign_key_list(table).length }.each do |table|
     app.DB[table].delete
   end
 end
 
-POSTITS_DATA = YAML.safe_load_file('app/db/seeds/postit_seeds.yml')
-EVENTS_DATA = YAML.safe_load_file('app/db/seeds/event_seeds.yml')
+POSTITS_DATA = YAML.safe_load_file('app/db/seeds/postits_seed.yml')
+EVENTS_DATA = YAML.safe_load_file('app/db/seeds/events_seed.yml')
+ACCOUNTS_DATA = YAML.safe_load_file('app/db/seeds/accounts_seed.yml')
 
 MASS_ASSIGNMENT_POSTIT = {
   'id' => 500,

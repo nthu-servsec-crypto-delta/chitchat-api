@@ -4,7 +4,7 @@ require 'json'
 require 'sequel'
 require 'sequel/plugins/serialization'
 
-require_relative '../objects/location'
+require_relative 'location'
 
 Sequel::Plugins::Serialization.register_format(
   :location_s,
@@ -18,7 +18,7 @@ module ChitChat
     plugin :timestamps
     plugin :serialization
     plugin :whitelist_security
-    set_allowed_columns :location, :message
+    set_allowed_columns :location, :message, :username
 
     serialize_attributes :location_s, :location
 
@@ -36,6 +36,10 @@ module ChitChat
 
     def message=(plaintext)
       self.message_secure = SecureDB.encrypt(plaintext)
+    end
+
+    def username=(username)
+      # TODO: map this to owner_id
     end
   end
 end
