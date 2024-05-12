@@ -12,50 +12,24 @@ task :console do
   sh 'pry -r ./spec/app_test_loader.rb'
 end
 
-desc 'Tests API specs only'
-task :api_spec do
-  sh 'ruby spec/api_spec.rb'
-end
+namespace :spec do
+  desc 'Run integration tests only'
+  Rake::TestTask.new(:integration) do |t|
+    t.pattern = 'spec/integration/*_spec.rb'
+    t.warning = false
+  end
 
-desc 'Tests Account specs only'
-task :api_account_spec do
-  sh 'ruby spec/api_accounts_spec.rb'
-end
+  desc 'Run unit tests only'
+  Rake::TestTask.new(:unit) do |t|
+    t.pattern = 'spec/unit/*_spec.rb'
+    t.warning = false
+  end
 
-desc 'Tests Postit specs only'
-task :postit_spec do
-  sh 'ruby spec/postits_spec.rb'
-end
-
-desc 'Tests Event specs only'
-task :event_spec do
-  sh 'ruby spec/events_spec.rb'
-end
-
-desc 'Tests Environment specs only'
-task :env_spec do
-  sh 'ruby spec/env_spec.rb'
-end
-
-desc 'Tests SecureDB specs only'
-task :secure_db_spec do
-  sh 'ruby spec/secure_db_spec.rb'
-end
-
-desc 'Tests PasswordDigest specs only'
-task :password_digest_spec do
-  sh 'ruby spec/password_digest_spec.rb'
-end
-
-desc 'Tests AddStaffToEvent Service specs only'
-task :service_event_add_staff_spec do
-  sh 'ruby spec/service_event_add_staff_spec.rb'
-end
-
-desc 'Test all the specs'
-Rake::TestTask.new(:spec) do |t|
-  t.pattern = 'spec/*_spec.rb'
-  t.warning = false
+  desc 'Test all the specs'
+  Rake::TestTask.new(:all) do |t|
+    t.pattern = 'spec/**/*_spec.rb'
+    t.warning = false
+  end
 end
 
 desc 'Runs rubocop on tested code'

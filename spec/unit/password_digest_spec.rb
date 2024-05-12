@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'spec_common'
+require_relative '../spec_common'
 
 describe 'Test PasswordDigest Class' do
   it 'SECURITY: should hash password and hide raw password' do
