@@ -15,7 +15,7 @@ DIR = File.dirname(__FILE__)
 ACCOUNTS_INFO = YAML.load_file("#{DIR}/accounts_seed.yml")
 POSTITS_INFO = YAML.load_file("#{DIR}/postits_seed.yml")
 EVENTS_INFO = YAML.load_file("#{DIR}/events_seed.yml")
-PARTICIPANTS_INFO = YAML.load_file("#{DIR}/accounts_events.yml")
+PARTICIPANTS_INFO = YAML.load_file("#{DIR}/participations_seed.yml")
 
 def create_accounts
   ACCOUNTS_INFO.each do |account_info|
@@ -40,8 +40,8 @@ end
 
 def add_participants
   PARTICIPANTS_INFO.each do |participant|
-    ChitChat::Account.first(username: participant['username'])
-    ChitChat::Event.first(name: participant['eventname'])
-    # account.add_event(event, role: participant['role'])
+    account = ChitChat::Account.first(username: participant['username'])
+    event = ChitChat::Event.first(name: participant['eventname'])
+    ChitChat::Participation.create(account_id: account.id, event_id: event.id, role: participant['role'])
   end
 end
