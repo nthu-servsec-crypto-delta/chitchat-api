@@ -27,13 +27,10 @@ module ChitChat
       routing.post do
         new_data = JSON.parse(routing.body.read)
         new_event = Event.create(new_data)
+        raise('Could not create event') unless new_event.save
 
-        if new_event
-          response.status = 201
-          { message: 'Event created', id: new_event.id }
-        else
-          routing.halt 400, { message: 'Could not create event' }
-        end
+        response.status = 201
+        { message: 'Event created', id: new_event.id }
       rescue Sequel::MassAssignmentRestriction
         Api.logger.warn "MASS-ASSIGNMENT(Events): #{new_data.keys}"
         routing.halt 400, { message: 'Illegal Attributes' }
