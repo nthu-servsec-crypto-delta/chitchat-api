@@ -12,9 +12,10 @@ require_relative 'app_test_loader'
 
 def wipe_database
   # Remove table with foreign constraints first
-  app.DB.tables.sort_by { |table| -app.DB.foreign_key_list(table).length }.each do |table|
-    app.DB[table].delete
-  end
+  ChitChat::Participation.map(&:destroy)
+  ChitChat::Postit.map(&:destroy)
+  ChitChat::Event.map(&:destroy)
+  ChitChat::Account.map(&:destroy)
 end
 
 POSTITS_DATA = YAML.safe_load_file('app/db/seeds/postits_seed.yml')

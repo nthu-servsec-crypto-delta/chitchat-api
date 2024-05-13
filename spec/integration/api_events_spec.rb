@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'spec_common'
+require_relative '../spec_common'
 
 describe 'Test events API' do
   before do
