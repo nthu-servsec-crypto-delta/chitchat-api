@@ -6,7 +6,7 @@ describe 'Test postits API' do
   before do
     wipe_database
 
-    POSTITS_DATA.each do |postit_data|
+    DATA[:postits].each do |postit_data|
       ChitChat::Postit.create(postit_data)
     end
   end
@@ -50,7 +50,7 @@ describe 'Test postits API' do
 
   it 'HAPPY: should be able to create new postits' do
     req_header = { 'CONTENT_TYPE' => 'application/json' }
-    post 'api/v1/postits', POSTITS_DATA[1].to_json, req_header
+    post 'api/v1/postits', DATA[:postits][1].to_json, req_header
 
     _(last_response.status).must_equal 201
   end

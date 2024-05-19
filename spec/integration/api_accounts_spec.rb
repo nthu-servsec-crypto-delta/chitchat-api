@@ -11,7 +11,7 @@ describe 'Test Account Handling' do
 
   describe 'Account information' do
     it 'HAPPY: should be able to get details of a single account' do
-      account_data = ACCOUNTS_DATA[1]
+      account_data = DATA[:accounts][1]
       account = ChitChat::Account.create(account_data)
 
       get "/api/v1/accounts/#{account.username}"
@@ -26,7 +26,7 @@ describe 'Test Account Handling' do
   describe 'Account Creation' do
     before do
       @req_header = { 'CONTENT_TYPE' => 'application/json' }
-      @account_data = ACCOUNTS_DATA[1]
+      @account_data = DATA[:accounts][1]
     end
 
     it 'HAPPY: should be able to create new accounts' do
