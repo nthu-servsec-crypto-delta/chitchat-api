@@ -11,9 +11,8 @@ Sequel.migration do
       foreign_key :account_id, :accounts, null: false
 
       String :role, null: false, default: 'attendee'
-      add_constraint(:valid_role) do
-        role.in(%w[attendee staff organizer])
-      end
+
+      check { role =~ %w[attendee staff organizer] }
     end
   end
 end
