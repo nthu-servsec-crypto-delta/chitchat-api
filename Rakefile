@@ -104,6 +104,14 @@ namespace :db do
   task reseed: [:reset_seeds, :seed]
 end
 
+namespace :run do
+  # Run in development mode
+  desc 'Run Web Api in development mode'
+  task :dev => :print_env do
+    sh 'puma -p 3000'
+  end
+end
+
 # Add a new key named DB_KEY in secrets.yml before running this task or an error caused by require_app will occur
 # Reason of the error:
 # Rakefile -> require_app -> require('config') -> require environments ->
