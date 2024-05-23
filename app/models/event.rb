@@ -17,7 +17,6 @@ module ChitChat
   # Event Model
   class Event < Sequel::Model
     many_to_many :accounts, join_table: :participations, left_key: :event_id, right_key: :account_id
-    many_to_many :participations
 
     plugin :timestamps
     plugin :serialization

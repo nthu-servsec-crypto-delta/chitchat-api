@@ -12,7 +12,7 @@ describe 'Test Authentication Routes' do
 
   describe 'Account Authentication' do
     before do
-      @account_data = ACCOUNTS_DATA[1]
+      @account_data = DATA[:accounts][1]
       @account = ChitChat::Account.create(@account_data)
     end
 

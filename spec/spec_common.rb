@@ -18,9 +18,12 @@ def wipe_database
   ChitChat::Account.map(&:destroy)
 end
 
-POSTITS_DATA = YAML.safe_load_file('app/db/seeds/postits_seed.yml')
-EVENTS_DATA = YAML.safe_load_file('app/db/seeds/events_seed.yml')
-ACCOUNTS_DATA = YAML.safe_load_file('app/db/seeds/accounts_seed.yml')
+DATA = {
+  accounts: YAML.safe_load_file('app/db/seeds/accounts_seed.yml'),
+  postits: YAML.safe_load_file('app/db/seeds/postits_seed.yml'),
+  events: YAML.safe_load_file('app/db/seeds/events_seed.yml'),
+  participations: YAML.safe_load_file('app/db/seeds/participations_seed.yml')
+}.freeze
 
 MASS_ASSIGNMENT_POSTIT = {
   'id' => 500,

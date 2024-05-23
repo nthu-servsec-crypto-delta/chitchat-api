@@ -6,7 +6,7 @@ describe 'Test events API' do
   before do
     wipe_database
 
-    EVENTS_DATA.each do |event_data|
+    DATA[:events].each do |event_data|
       ChitChat::Event.create(event_data)
     end
   end
@@ -50,7 +50,7 @@ describe 'Test events API' do
 
   it 'HAPPY: should be able to create new events' do
     req_header = { 'CONTENT_TYPE' => 'application/json' }
-    post 'api/v1/events', EVENTS_DATA[1].to_json, req_header
+    post 'api/v1/events', DATA[:events][1].to_json, req_header
 
     _(last_response.status).must_equal 201
   end

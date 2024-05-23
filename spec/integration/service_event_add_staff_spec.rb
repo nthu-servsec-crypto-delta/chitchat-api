@@ -6,11 +6,11 @@ describe 'Test AddStaffToEvent Service' do
   before do
     wipe_database
 
-    ACCOUNTS_DATA.each do |account|
+    DATA[:accounts].each do |account|
       ChitChat::Account.create(account)
     end
 
-    event_data = EVENTS_DATA[0]
+    event_data = DATA[:events][0]
 
     @organizer = ChitChat::Account.all[0]
     @staff = ChitChat::Account.all[1]
