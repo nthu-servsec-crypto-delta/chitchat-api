@@ -5,6 +5,7 @@ require 'figaro'
 require 'sequel'
 require 'logger'
 require './app/lib/secure_db'
+require './app/lib/auth_token'
 
 module ChitChat
   # Configuration for the API
@@ -38,7 +39,8 @@ module ChitChat
     # rubocop:enable Lint/ConstantDefinitionInBlock
 
     # Load crypto keys
-    SecureDB.setup(ENV.delete('DB_KEY'))
+    SecureDB.setup(ENV.delete('DB_KEY')) # Load crypto key
+    AuthToken.setup(ENV.fetch('MSG_KEY')) # Load crypto key
 
     configure :development, :test do
       require 'pry'

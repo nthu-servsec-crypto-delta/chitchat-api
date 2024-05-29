@@ -112,14 +112,21 @@ namespace :run do
   end
 end
 
-# Add a new key named DB_KEY in secrets.yml before running this task or an error caused by require_app will occur
+# Add keys named DB_KEY & MSG_KEY in secrets.yml before running this task or an error caused by require_app will occur
 # Reason of the error:
 # Rakefile -> require_app -> require('config') -> require environments ->
-# SecureDB.setup(ENV.delete('DB_KEY')) -> cannot find DB_KEY environment variable
+# Secure.setup(ENV.delete('DB_KEY')) -> cannot find DB_KEY environment variable
+# AuthToken.setup(ENV.delete('DB_KEY')) -> cannot find MSG_KEY environment variable
 namespace :newkey do
   desc 'Create sample cryptographic key for database'
   task :db do
-    require_app('lib')
+    require_app('lib', config: false)
     puts "DB_KEY: #{SecureDB.generate_key}"
+  end
+
+  desc 'Create sample cryptographic key for tokens and messaging'
+  task :msg do
+    require_app('lib', config: false)
+    puts "MSG_KEY: #{AuthToken.generate_key}"
   end
 end
