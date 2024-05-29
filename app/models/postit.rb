@@ -15,6 +15,8 @@ Sequel::Plugins::Serialization.register_format(
 module ChitChat
   # Postit with location and message
   class Postit < Sequel::Model
+    many_to_one :owner, class: :'ChitChat::Account'
+
     plugin :timestamps
     plugin :serialization
     plugin :whitelist_security

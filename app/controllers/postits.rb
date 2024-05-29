@@ -19,8 +19,11 @@ module ChitChat
 
       # GET api/v1/postits
       routing.get do
-        response.status = 200
-        { postit_ids: Postit.all.map(&:id) }
+        account = Account.first(username: @auth_account['username'])
+        postits = account.owned_postits
+        JSON.pretty_generate(data: postits)
+      rescue StandardError
+        routing.halt 403, { message: 'Could not find any postits' }.to_json
       end
 
       # POST api/v1/postits
