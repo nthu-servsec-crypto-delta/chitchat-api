@@ -2,8 +2,8 @@
 
 require 'roda'
 require_relative 'app'
-require_relative 'services/validate_registration'
-require_relative 'services/send_registration_email'
+require_relative '../services/validate_registration'
+require_relative '../services/send_registration_email'
 
 module ChitChat
   # Web controller for Credence API
