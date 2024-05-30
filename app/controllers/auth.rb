@@ -17,6 +17,7 @@ module ChitChat
           SendRegistrationEmail.new(registration_data).call
 
           response.status = 202
+          Api.logger.info("Registration email sent to #{registration_data[:email]}")
           { message: 'Email sent' }.to_json
         rescue ValidateRegistration::InvalidRegistrationError => e
           routing.halt 400, { message: e.message }.to_json
