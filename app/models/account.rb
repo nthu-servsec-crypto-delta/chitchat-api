@@ -18,9 +18,11 @@ module ChitChat
     def to_json(options = {})
       JSON(
         {
-          id:,
-          username:,
-          email:
+          type: 'account',
+          attributes: {
+            username:,
+            email:
+          }
         }, options
       )
     end
