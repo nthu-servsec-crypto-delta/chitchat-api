@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 module ChitChat
-  class InvalidRegistrationError < StandardError; end
-
   # Service to validate registration
   class ValidateRegistration
+    class InvalidRegistrationError < StandardError; end
+
     def initialize(registration_data)
       @registration_data = registration_data
     end
