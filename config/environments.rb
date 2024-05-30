@@ -6,6 +6,7 @@ require 'sequel'
 require 'logger'
 require './app/lib/secure_db'
 require './app/lib/auth_token'
+require './app/lib/sendgrid'
 
 module ChitChat
   # Configuration for the API
@@ -41,6 +42,9 @@ module ChitChat
     # Load crypto keys
     SecureDB.setup(ENV.delete('DB_KEY')) # Load crypto key
     AuthToken.setup(ENV.fetch('MSG_KEY')) # Load crypto key
+
+    # Load Email API
+    SendGrid.setup(ENV.fetch('SENDGRID_APIKEY'), ENV.fetch('SENDGRID_SENDER'))
 
     configure :development, :test do
       require 'pry'
