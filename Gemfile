@@ -8,6 +8,8 @@ gem 'json'
 gem 'puma', '~>6.1'
 gem 'roda', '~>3.1'
 
+gem 'http'
+
 # Configuration
 gem 'figaro', '~>1.2'
 gem 'rake'
