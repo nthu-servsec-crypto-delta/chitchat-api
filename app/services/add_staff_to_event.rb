@@ -7,7 +7,7 @@ module ChitChat
       event = Event.first(id: event_id)
       staff = Account.first(username: staff_username)
 
-      event.add_account(staff)
+      event.add_co_organizer(staff)
 
       # update role column
       # row = app.DB[:accounts_events].where(event_id:, account_id: staff.id).first

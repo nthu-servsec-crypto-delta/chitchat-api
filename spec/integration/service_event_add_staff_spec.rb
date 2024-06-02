@@ -25,7 +25,7 @@ describe 'Test AddStaffToEvent Service' do
       event_id: @event.id, staff_username: @staff.username
     )
 
-    _(@event.accounts.include?(@staff)).must_equal true
+    _(@event.co_organizers.include?(@staff)).must_equal true
     # _(app.DB[:accounts_events].where(event_id: @event.id, account_id: @staff.id).first[:role]).must_equal 'staff'
   end
 end

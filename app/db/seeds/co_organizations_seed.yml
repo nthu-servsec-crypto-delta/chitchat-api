@@ -1,0 +1,10 @@
+---
+- username: soumya.ray
+  eventname: Docker Workshop
+- username: hank
+  eventname: Free Lunch
+- username: hank
+  eventname: Docker Workshop
+  role: attendee
+- username: tony
+  eventname: AIS3

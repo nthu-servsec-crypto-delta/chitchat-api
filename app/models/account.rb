@@ -7,9 +7,15 @@ module ChitChat
   # Models a registered account
   class Account < Sequel::Model
     one_to_many :owned_postits, class: :'ChitChat::Postit', key: :owner_id
-
-    many_to_many :events, join_table: :participations, left_key: :account_id, right_key: :event_id
-
+    one_to_many :owned_events, class: :'ChitChat::Event', key: :organizer_id
+    many_to_many  :co_organized_events,
+                  class: :'ChitChat::Event',
+                  join_table: :accounts_events,
+                  left_key: :co_organizer_id, right_key: :event_id
+    many_to_many  :participated_events,
+                  class: :'ChitChat::Event',
+                  join_table: :participations,
+                  left_key: :account_id, right_key: :event_id
     plugin :whitelist_security
     set_allowed_columns :username, :email, :password
 

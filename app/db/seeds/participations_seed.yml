@@ -1,14 +1,13 @@
 ---
 - username: soumya.ray
   eventname: Docker Workshop
-  role: organizer
-- username: hank
-  eventname: Free Lunch
-  role: organizer
+  approved: true
 - username: hank
   eventname: Docker Workshop
-  role: attendee
+  approved: true
 - username: tony
-  eventname: AIS3
-  role: organizer
-# event_name is not uniquely identified, event time and location should be included to ensure the uniqueness of the event
+  eventname: Docker Workshop
+  approved: true
+- username: john.doe
+  eventname: Docker Workshop
+  approved: false

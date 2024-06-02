@@ -9,10 +9,7 @@ Sequel.migration do
 
       foreign_key :event_id, :events, null: false
       foreign_key :account_id, :accounts, null: false
-
-      String :role, null: false, default: 'attendee'
-
-      check { role =~ %w[attendee staff organizer] }
+      TrueClass :approved, null: false, default: true
     end
   end
 end
