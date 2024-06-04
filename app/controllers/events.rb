@@ -39,6 +39,31 @@ module ChitChat
         Api.logger.error "UNKNOWN ERROR: #{e.message}"
         routing.halt 500, { message: 'Unknown error' }
       end
+
+      routing.on String do |event_id|
+        @event = Event.first(id: event_id)
+        routing.on 'participants' do
+          # PUT api/v1/events/[event_id]/participants
+          routing.put do
+            req_data = JSON.parse(routing.body.read)
+            co_organizer = AddCoOrganizer.call(
+              account: @auth_account,
+              event: @event,
+              co_organizer_email: req_data['email']
+            )
+            { data: co_organizer }.to_json
+          rescue AddCoOrganizer::ForbiddenError => e
+            routing.halt 403, { message: e.message }.to_json
+          rescue StandardError
+            routing.halt 500, { message: 'API server error' }.to_json
+          end
+        end
+        # DELETE api/v1/events/[event_id]/participants
+
+        # PUT api/v1/events/[event_id]/co_organizers
+
+        # DELETE api/v1/events/[event_id]/co_organizers
+      end
     end
   end
 end
