@@ -12,7 +12,7 @@ module ChitChat
     def to_json(options = {})
       JSON(
         {
-          role:
+          approved:
         },
         options
       )
