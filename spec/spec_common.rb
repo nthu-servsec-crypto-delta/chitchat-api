@@ -17,6 +17,15 @@ def wipe_database
   end
 end
 
+def auth_header(account_data)
+  auth = ChitChat::AuthenticateAccount.call(
+    username: account_data['username'],
+    password: account_data['password']
+  )
+
+  "Bearer #{auth[:attributes][:auth_token]}"
+end
+
 DATA = {
   accounts: YAML.safe_load_file('app/db/seeds/accounts_seed.yml'),
   postits: YAML.safe_load_file('app/db/seeds/postits_seed.yml'),

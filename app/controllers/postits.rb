@@ -19,8 +19,7 @@ module ChitChat
 
       # GET api/v1/postits
       routing.get do
-        account = Account.first(username: @auth_account['username'])
-        postits = account.owned_postits
+        postits = @auth_account.owned_postits
         JSON.pretty_generate(data: postits)
       rescue StandardError
         routing.halt 403, { message: 'Could not find any postits' }.to_json
@@ -29,7 +28,8 @@ module ChitChat
       # POST api/v1/postits
       routing.post do
         new_data = JSON.parse(routing.body.read)
-        new_postit = Postit.create(new_data)
+        postit = ChitChat::Postit.create(new_data)
+        new_postit = @auth_account.add_owned_postit(postit)
 
         if new_postit
           response.status = 201

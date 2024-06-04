@@ -16,7 +16,7 @@ Sequel::Plugins::Serialization.register_format(
 module ChitChat
   # Event Model
   class Event < Sequel::Model
-    many_to_one :accounts, class: :'ChitChat::Account', key: :organizer_id
+    many_to_one :organizer, class: :'ChitChat::Account'
     many_to_many :co_organizers, class: :'ChitChat::Account',
                                  join_table: :accounts_events,
                                  left_key: :event_id, right_key: :co_organizer_id
