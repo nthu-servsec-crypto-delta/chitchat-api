@@ -15,8 +15,15 @@ This is the ChitChat API.
 ### Event Routes
 
 * GET `api/v1/events/[event_id]`: Get an event
-* POST `api/v1/events/[event_id]`: Create a new event
 * GET `api/v1/events/`: Get a list of events
+* POST `api/v1/events/`: Create a new event
+* PUT `api/v1/events/[event_id]/applicant`: Apply for an event
+* DELETE `api/v1/events/[event_id]/applicant`: Cancel the application for the event
+* PUT `api/v1/events/[event_id]/participant`: Make an applicant an participant
+* DELETE `api/v1/events/[event_id]/participant`: Remove participant
+* PUT `api/v1/events/[event_id]/co_organizer`: Add co-organizer
+* DELETE `api/v1/events/[event_id]/co_organizer`: Remove co-organizer
+* GET `api/v1/events/[event_id]/accounts`: All the accounts that is in an event
 
 ### Accounts Routes
 
