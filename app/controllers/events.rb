@@ -106,6 +106,15 @@ module ChitChat
           end
         end
 
+        # GET api/v1/events/[event_id]/accounts
+        routing.get 'accounts' do
+          response.status = 200
+          accounts = EventScope.new(@auth_account, @event).viewable
+          JSON.pretty_generate(data: accounts)
+        rescue StandardError
+          routing.halt 500, { message: 'Unknown error' }.to_json
+        end
+
         # GET api/v1/events/[event_id]
         routing.get do
           response.status = 200
