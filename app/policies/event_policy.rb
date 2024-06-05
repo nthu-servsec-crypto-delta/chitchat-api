@@ -29,7 +29,7 @@ module ChitChat
     end
 
     def can_remove_co_organizers?
-      account_is_owner?
+      account_is_organizer?
     end
 
     def can_approve_participants?

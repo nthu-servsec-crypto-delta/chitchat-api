@@ -22,7 +22,7 @@ module ChitChat
     private
 
     def target_is_co_organizer?
-      @project.co_organizer.include?(@target_account)
+      @event.co_organizers.include?(@target_account)
     end
   end
 end

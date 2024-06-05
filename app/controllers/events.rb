@@ -42,8 +42,8 @@ module ChitChat
 
       routing.on String do |event_id|
         @event = Event.first(id: event_id)
-        routing.on 'participants' do
-          # PUT api/v1/events/[event_id]/participants
+        routing.on 'co_organizers' do
+          # PUT api/v1/events/[event_id]/co_organizers
           routing.put do
             req_data = JSON.parse(routing.body.read)
             co_organizer = AddCoOrganizer.call(
@@ -57,12 +57,27 @@ module ChitChat
           rescue StandardError
             routing.halt 500, { message: 'API server error' }.to_json
           end
+
+          # DELETE api/v1/events/[event_id]/co_organizers
+          routing.delete do
+            req_data = JSON.parse(routing.body.read)
+            co_organizer = RemoveCoOrganizer.call(
+              account: @auth_account,
+              event: @event,
+              co_organizer_email: req_data['email']
+            )
+            { message: "#{co_organizer.username} removed from event",
+              data: collaborator }.to_json
+          rescue RemoveCoOrganizer::ForbiddenError => e
+            routing.halt 403, { message: e.message }.to_json
+          rescue StandardError
+            routing.halt 500, { message: 'API server error' }.to_json
+          end
         end
+
+        # PUT api/v1/events/[event_id]/participants
+
         # DELETE api/v1/events/[event_id]/participants
-
-        # PUT api/v1/events/[event_id]/co_organizers
-
-        # DELETE api/v1/events/[event_id]/co_organizers
       end
     end
   end
