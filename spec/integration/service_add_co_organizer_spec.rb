@@ -20,4 +20,20 @@ describe 'Test AddCoOrganizer Service' do
     )
     _(@event.co_organizers.include?(@co_organizer)).must_equal true
   end
+
+  it 'HAPPY: should be able to add/remove co-organizer to/from event' do
+    ChitChat::AddCoOrganizer.call(
+      event: @event,
+      account: @organizer,
+      co_organizer_email: @co_organizer.email
+    )
+    _(@event.co_organizers.include?(@co_organizer)).must_equal true
+
+    ChitChat::RemoveCoOrganizer.call(
+      event: @event,
+      account: @organizer,
+      co_organizer_email: @co_organizer.email
+    )
+    _(@event.co_organizers.include?(@co_organizer)).must_equal false
+  end
 end

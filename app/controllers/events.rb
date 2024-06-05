@@ -10,39 +10,10 @@ module ChitChat
     route('events') do |routing|
       @event_route = "#{@api_root}/events"
 
-      # GET api/v1/events/[id]
-      routing.get String do |event_id|
-        response.status = 200
-        event = Event.first(id: event_id)
-        event ? event.to_json : raise('Event not found')
-      rescue StandardError => e
-        routing.halt 404, { message: e.message }
-      end
-
-      # GET api/v1/events
-      routing.get do
-        response.status = 200
-        { event_ids: Event.all.map(&:id) }
-      end
-
-      # POST api/v1/events
-      routing.post do
-        new_data = JSON.parse(routing.body.read)
-        new_event = @auth_account.add_owned_event(new_data)
-
-        response.status = 201
-        { message: 'Event created', id: new_event.id }
-      rescue Sequel::MassAssignmentRestriction
-        Api.logger.warn "MASS-ASSIGNMENT(Events): #{new_data.keys}"
-        routing.halt 400, { message: 'Illegal Attributes' }
-      rescue StandardError => e
-        Api.logger.error "UNKNOWN ERROR: #{e.message}"
-        routing.halt 500, { message: 'Unknown error' }
-      end
-
       routing.on String do |event_id|
         @event = Event.first(id: event_id)
-        routing.on 'co_organizers' do
+
+        routing.on('co_organizers') do
           # PUT api/v1/events/[event_id]/co_organizers
           routing.put do
             req_data = JSON.parse(routing.body.read)
@@ -67,7 +38,7 @@ module ChitChat
               co_organizer_email: req_data['email']
             )
             { message: "#{co_organizer.username} removed from event",
-              data: collaborator }.to_json
+              data: co_organizer }.to_json
           rescue RemoveCoOrganizer::ForbiddenError => e
             routing.halt 403, { message: e.message }.to_json
           rescue StandardError
@@ -78,6 +49,37 @@ module ChitChat
         # PUT api/v1/events/[event_id]/participants
 
         # DELETE api/v1/events/[event_id]/participants
+
+        # GET api/v1/events/[event_id]
+        routing.get do
+          response.status = 200
+          @event ? @event.to_json : raise('Event not found')
+        rescue StandardError => e
+          routing.halt 404, { message: e.message }
+        end
+      end
+
+      routing.is do
+        # GET api/v1/events
+        routing.get do
+          response.status = 200
+          { event_ids: Event.all.map(&:id) }
+        end
+
+        # POST api/v1/events
+        routing.post do
+          new_data = JSON.parse(routing.body.read)
+          new_event = @auth_account.add_owned_event(new_data)
+
+          response.status = 201
+          { message: 'Event created', id: new_event.id }
+        rescue Sequel::MassAssignmentRestriction
+          Api.logger.warn "MASS-ASSIGNMENT(Events): #{new_data.keys}"
+          routing.halt 400, { message: 'Illegal Attributes' }
+        rescue StandardError => e
+          Api.logger.error "UNKNOWN ERROR: #{e.message}"
+          routing.halt 500, { message: 'Unknown error' }
+        end
       end
     end
   end
