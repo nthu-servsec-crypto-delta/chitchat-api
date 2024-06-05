@@ -6,7 +6,7 @@ require_relative 'app'
 
 module ChitChat
   # Main App
-  class Api < Roda
+  class Api < Roda # rubocop:disable Metrics/ClassLength
     route('events') do |routing|
       @event_route = "#{@api_root}/events"
 
@@ -46,9 +46,65 @@ module ChitChat
           end
         end
 
-        # PUT api/v1/events/[event_id]/participants
+        routing.on('applicants') do
+          # PUT api/v1/events/[event_id]/applicants
+          routing.put do
+            applicant = AddApplicant.call(
+              account: @auth_account,
+              event: @event
+            )
+            { data: applicant }.to_json
+          rescue AddApplicant::ForbiddenError => e
+            routing.halt 403, { message: e.message }.to_json
+          rescue StandardError
+            routing.halt 500, { message: 'API server error' }.to_json
+          end
 
-        # DELETE api/v1/events/[event_id]/participants
+          # DELETE api/v1/events/[event_id]/applicants
+          routing.delete do
+            applicant = RemoveApplicant.call(
+              account: @auth_account,
+              event: @event
+            )
+            { data: applicant }.to_json
+          rescue RemoveApplicant::ForbiddenError => e
+            routing.halt 403, { message: e.message }.to_json
+          rescue StandardError
+            routing.halt 500, { message: 'API server error' }.to_json
+          end
+        end
+
+        routing.on('participants') do
+          # PUT api/v1/events/[event_id]/participants
+          routing.put do
+            req_data = JSON.parse(routing.body.read)
+            participant = AddParticipant.call(
+              account: @auth_account,
+              event: @event,
+              participant_email: req_data['email']
+            )
+            { data: participant }.to_json
+          rescue AddParticipant::ForbiddenError => e
+            routing.halt 403, { message: e.message }.to_json
+          rescue StandardError
+            routing.halt 500, { message: 'API server error' }.to_json
+          end
+
+          # DELETE api/v1/events/[event_id]/participants
+          routing.delete do
+            req_data = JSON.parse(routing.body.read)
+            participant = RemoveParticipant.call(
+              account: @auth_account,
+              event: @event,
+              participant_email: req_data['email']
+            )
+            { data: participant }.to_json
+          rescue RemoveParticipant::ForbiddenError => e
+            routing.halt 403, { message: e.message }.to_json
+          rescue StandardError
+            routing.halt 500, { message: 'API server error' }.to_json
+          end
+        end
 
         # GET api/v1/events/[event_id]
         routing.get do

@@ -9,7 +9,7 @@ module ChitChat
     end
 
     def can_view?
-      account_is_organizer? || account_is_co_organizer? || account_is_approved_participant?
+      account_is_organizer? || account_is_co_organizer? || account_is_participant?
     end
 
     def can_edit?
@@ -21,7 +21,7 @@ module ChitChat
     end
 
     def can_leave?
-      account_is_co_organizer? || account_is_approved_participant?
+      account_is_co_organizer? || account_is_participant?
     end
 
     def can_add_co_organizers?
@@ -32,15 +32,31 @@ module ChitChat
       account_is_organizer?
     end
 
-    def can_approve_participants?
+    def can_approve_applicants?
       account_is_organizer? || account_is_co_organizer?
+    end
+
+    def can_reject_applicants?
+      account_is_organizer? || account_is_co_organizer?
+    end
+
+    def can_participate?
+      account_is_applicant? && !(account_is_organizer? || account_is_co_organizer? || account_is_participant?)
+    end
+
+    def can_apply?
+      !account_is_organizer? && !account_is_co_organizer? && !account_is_participant? && !account_is_applicant?
+    end
+
+    def can_cancel?
+      account_is_applicant?
     end
 
     def can_co_organize?
       !(account_is_organizer? || account_is_co_organizer?)
     end
 
-    def summary
+    def summary # rubocop:disable Metrics/MethodLength
       {
         can_view: can_view?,
         can_edit: can_edit?,
@@ -48,8 +64,10 @@ module ChitChat
         can_leave: can_leave?,
         can_add_co_organizers: can_add_co_organizers?,
         can_remove_co_organizers: can_remove_co_organizers?,
-        can_approve_participants: can_approve_participants?,
-        can_co_organize: can_co_organize?
+        can_approve_applicants: can_approve_applicants?,
+        can_reject_applicants: can_reject_applicants?,
+        can_apply: can_apply?,
+        can_cancel: can_cancel?
       }
     end
 
@@ -64,15 +82,13 @@ module ChitChat
     end
 
     def account_is_participant?
-      @event.participants.include?(@account)
+      @event.participants.include?(@account) &&
+        Participation.find(account_id: @account.id, event_id: @event.id).approved
     end
 
-    def account_is_approved_participant?
-      account_is_participant? && Participation.find(account_id: @account.id, event_id: @event.id).approved
-    end
-
-    def account_is_pending_participant?
-      account_is_participant? && !Participation.find(account_id: @account.id, event_id: @event.id).approved
+    def account_is_applicant?
+      @event.participants.include?(@account) &&
+        !Participation.find(account_id: @account.id, event_id: @event.id).approved
     end
   end
 end
