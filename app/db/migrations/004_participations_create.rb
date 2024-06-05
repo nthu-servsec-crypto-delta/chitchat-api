@@ -9,7 +9,7 @@ Sequel.migration do
 
       foreign_key :event_id, :events, null: false
       foreign_key :account_id, :accounts, null: false
-      TrueClass :approved, null: false, default: true
+      TrueClass :approved, null: false, default: false
     end
   end
 end
