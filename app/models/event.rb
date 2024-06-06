@@ -42,7 +42,10 @@ module ChitChat
             location:,
             radius:,
             start_time:,
-            end_time:
+            end_time:,
+            organizer:,
+            co_organizers:,
+            participants:
           }
         },
         options

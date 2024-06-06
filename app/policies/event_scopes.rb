@@ -15,7 +15,7 @@ module ChitChat
 
       def with_roles
         all.select do |event|
-          includes_role?(event, @current_account)
+          includes_role?(event, @account)
         end
       end
 

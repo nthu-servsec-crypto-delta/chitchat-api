@@ -10,6 +10,15 @@ module ChitChat
     route('events') do |routing|
       @event_route = "#{@api_root}/events"
 
+      # GET api/v1/events/all
+      routing.get 'all' do
+        response.status = 200
+        events = EventPolicy::AccountScope.new(@auth_account).all
+        JSON.pretty_generate(data: events)
+      rescue StandardError
+        routing.halt 500, { message: 'Unknown error' }.to_json
+      end
+
       routing.on String do |event_id|
         @event = Event.first(id: event_id)
 
@@ -128,7 +137,10 @@ module ChitChat
         # GET api/v1/events
         routing.get do
           response.status = 200
-          { event_ids: Event.all.map(&:id) }
+          events = EventPolicy::AccountScope.new(@auth_account).with_roles
+          JSON.pretty_generate(data: events)
+        rescue StandardError
+          routing.halt 500, { message: 'Unknown error' }.to_json
         end
 
         # POST api/v1/events
