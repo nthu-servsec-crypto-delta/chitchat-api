@@ -8,8 +8,9 @@ module ChitChat
       @event = event
     end
 
+    # Any one can view an event, but cannot view the accounts/postit in it until approved
     def can_view?
-      account_is_organizer? || account_is_co_organizer? || account_is_participant?
+      true
     end
 
     def can_edit?

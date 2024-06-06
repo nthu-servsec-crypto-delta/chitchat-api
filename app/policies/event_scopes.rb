@@ -1,26 +1,31 @@
 # frozen_string_literal: true
 
 module ChitChat
-  # Policy to determine if account can view other accounts
-  class EventScope
-    def initialize(account, event)
-      @account = account
-      @event = event
-    end
+  # Policy to determine if account can view a event
+  class EventPolicy
+    # Scope of event policies
+    class AccountScope
+      def initialize(account)
+        @account = account
+      end
 
-    # For now all accounts in an event can view all other accounts
-    def viewable
-      policy = EventPolicy.new(@account, @event).can_view?
+      def all
+        Event.all
+      end
 
-      [] unless policy
+      def with_roles
+        all.select do |event|
+          includes_role?(event, @current_account)
+        end
+      end
 
-      all_accounts(@event)
-    end
+      private
 
-    private
-
-    def all_accounts(event)
-      [event.organizer] + event.co_organizers + event.participants
+      def includes_role?(event, account)
+        event.organizer == account ||
+          event.co_organizers.include?(account) ||
+          event.participants.include?(account)
+      end
     end
   end
 end
