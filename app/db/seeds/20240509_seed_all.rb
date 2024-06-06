@@ -28,8 +28,13 @@ def create_accounts
 end
 
 def create_events
-  DATA[:events].each do |event|
-    ChitChat::Event.create(event)
+  DATA[:events].each do |event_data|
+    organizer_name = event_data['organizer_name']
+    event_data.delete('organizer_name')
+    ChitChat::CreateEventForOrganizer.call(
+      organizer_id: ChitChat::Account.first(username: organizer_name).id,
+      event_data:
+    )
   end
 end
 

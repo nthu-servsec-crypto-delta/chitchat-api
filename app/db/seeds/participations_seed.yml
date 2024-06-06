@@ -1,7 +1,4 @@
 ---
-- username: soumya.ray
-  eventname: Docker Workshop
-  approved: true
 - username: hank
   eventname: Docker Workshop
   approved: true
@@ -10,4 +7,10 @@
   approved: true
 - username: john.doe
   eventname: Docker Workshop
+  approved: false
+- username: tony
+  eventname: Free Lunch
+  approved: true
+- username: soumya.ray
+  eventname: Free Lunch
   approved: false

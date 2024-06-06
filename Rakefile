@@ -64,6 +64,10 @@ namespace :db do
     require_app('models')
   end
 
+  task :load_services do
+    require_app('services')
+  end
+
   desc 'Run migrations'
   task :migrate => [:load, :print_env] do
     puts 'Migrating database to latest'
@@ -93,7 +97,7 @@ namespace :db do
   end
 
   desc 'Seeds the development database'
-  task :seed => [:load, :load_models] do
+  task :seed => [:load, :load_models, :load_services] do
     require 'sequel/extensions/seed'
     Sequel::Seed.setup(:development)
     Sequel.extension :seed
