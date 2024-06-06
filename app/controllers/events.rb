@@ -127,7 +127,12 @@ module ChitChat
         # GET api/v1/events/[event_id]
         routing.get do
           response.status = 200
-          @event ? @event.to_json : raise('Event not found')
+          raise('Event not found') unless @event
+
+          {
+            data: @event.to_json,
+            policies: EventPolicy.new(@auth_account, @event).summary.to_json
+          }.to_json
         rescue StandardError => e
           routing.halt 404, { message: e.message }
         end
@@ -138,7 +143,7 @@ module ChitChat
         routing.get do
           response.status = 200
           events = EventPolicy::AccountScope.new(@auth_account).with_roles
-          JSON.pretty_generate(data: events)
+          { data: events }.to_json
         rescue StandardError
           routing.halt 500, { message: 'Unknown error' }.to_json
         end
