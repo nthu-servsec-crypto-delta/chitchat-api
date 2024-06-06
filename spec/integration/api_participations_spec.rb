@@ -15,15 +15,17 @@ describe 'Test Participation Handling' do
     @another_account = ChitChat::Account.create(@another_account_data)
     @wrong_account = ChitChat::Account.create(@wrong_account_data)
 
-    @event = ChitChat::Event.create(DATA[:events][0])
+    ChitChat::CreateEventForOrganizer.call(
+      organizer_id: @account.id,
+      event_data: DATA[:events][0]
+    )
+    @event = ChitChat::Event.find(name: DATA[:events][0]['name'])
 
     header 'CONTENT_TYPE', 'application/json'
   end
 
   describe 'Adding applicants to a event' do
     it 'HAPPY: should approve a application into a participant' do
-      @account.add_owned_event(@event)
-
       ChitChat::AddApplicant.call(
         event: @event,
         account: @another_account

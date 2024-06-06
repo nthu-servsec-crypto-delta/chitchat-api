@@ -15,7 +15,10 @@ describe 'Test events API' do
     header 'CONTENT_TYPE', 'application/json'
 
     DATA[:events].each do |event_data|
-      ChitChat::Event.create(event_data)
+      ChitChat::CreateEventForOrganizer.call(
+        organizer_id: @account.id,
+        event_data:
+      )
     end
   end
 

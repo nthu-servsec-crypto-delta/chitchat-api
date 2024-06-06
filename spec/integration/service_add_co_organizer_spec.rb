@@ -8,8 +8,12 @@ describe 'Test AddCoOrganizer Service' do
 
     @organizer = ChitChat::Account.create(DATA[:accounts][0])
     @co_organizer = ChitChat::Account.create(DATA[:accounts][1])
-    @event = ChitChat::Event.create(DATA[:events][0])
-    @organizer.add_owned_event(@event)
+    ChitChat::CreateEventForOrganizer.call(
+      organizer_id: @organizer.id,
+      event_data: DATA[:events][0]
+    )
+
+    @event = ChitChat::Event.find(name: DATA[:events][0]['name'])
   end
 
   it 'HAPPY: should be able to add co-organizer to event' do
