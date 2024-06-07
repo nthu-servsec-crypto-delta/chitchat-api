@@ -83,13 +83,11 @@ module ChitChat
     end
 
     def account_is_participant?
-      @event.participants.include?(@account) &&
-        Participation.find(account_id: @account.id, event_id: @event.id).approved
+      @event.participants.include?(@account)
     end
 
     def account_is_applicant?
-      @event.participants.include?(@account) &&
-        !Participation.find(account_id: @account.id, event_id: @event.id).approved
+      @event.applicants.include?(@account)
     end
   end
 end

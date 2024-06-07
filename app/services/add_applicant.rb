@@ -15,7 +15,7 @@ module ChitChat
 
       raise ForbiddenError unless policy.can_apply?
 
-      Participation.create(account_id: account.id, event_id: event.id, approved: false)
+      event.add_applicant(account)
 
       account
     end

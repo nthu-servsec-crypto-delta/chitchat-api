@@ -1,7 +1,6 @@
 ---
 - name: "AsiaBSDCon 2024"
   description: "AsiaBSDCon 2024 in JianTan Youth Activity Center"
-  organizer_name: tony
   location:
     latitude: 25.032969
     longitude: 121.565414
@@ -10,7 +9,6 @@
   end_time: "2027-03-16T17:00:00+08:00"
 - name: "AIS3"
   description: "AIS3 in NYCU"
-  organizer_name: tony
   location: 
     latitude: 24.813829
     longitude: 120.967484
@@ -19,7 +17,6 @@
   end_time: "2027-03-16T17:00:00+08:00"
 - name: "Free Lunch"
   description: "30 boxed lunches available. Anyone who wants to eat can come and pick them up at NTHU Delta Building 3rd floor"
-  organizer_name: hank
   location:
     latitude: 24.786637
     longitude: 120.988327
@@ -28,7 +25,6 @@
   end_time: "2027-03-16T17:00:00+08:00"
 - name: "Docker Workshop"
   description: "Docker Workshop in NTHU Delta Building 3rd floor"
-  organizer_name: soumya.ray
   location:
     latitude: 24.786637
     longitude: 120.988327

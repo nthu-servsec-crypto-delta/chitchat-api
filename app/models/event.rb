@@ -18,11 +18,14 @@ module ChitChat
   class Event < Sequel::Model
     many_to_one :organizer, class: :'ChitChat::Account'
     many_to_many :co_organizers, class: :'ChitChat::Account',
-                                 join_table: :accounts_events,
-                                 left_key: :event_id, right_key: :co_organizer_id
+                                 join_table: :co_organizers_events,
+                                 left_key: :event_id, right_key: :account_id
     many_to_many :participants, class: :'ChitChat::Account',
-                                join_table: :participations,
+                                join_table: :participants_events,
                                 left_key: :event_id, right_key: :account_id
+    many_to_many :applicants, class: :'ChitChat::Account',
+                              join_table: :applicants_events,
+                              left_key: :event_id, right_key: :account_id
 
     plugin :timestamps
     plugin :serialization
@@ -44,7 +47,8 @@ module ChitChat
           end_time:,
           organizer:,
           co_organizers:,
-          participants:
+          participants:,
+          applicants:
         }
       }
     end

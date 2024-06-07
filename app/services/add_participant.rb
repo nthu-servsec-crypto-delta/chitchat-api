@@ -16,7 +16,7 @@ module ChitChat
 
       raise ForbiddenError unless policy.can_approve?
 
-      Participation.first(account_id: invitee.id, event_id: event.id).approved = true
+      event.add_participant(invitee)
 
       invitee
     end

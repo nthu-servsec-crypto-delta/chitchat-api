@@ -10,11 +10,15 @@ module ChitChat
     one_to_many :owned_events, class: :'ChitChat::Event', key: :organizer_id
     many_to_many  :co_organized_events,
                   class: :'ChitChat::Event',
-                  join_table: :accounts_events,
-                  left_key: :co_organizer_id, right_key: :event_id
+                  join_table: :co_organizer_events,
+                  left_key: :account_id, right_key: :event_id
     many_to_many  :participated_events,
                   class: :'ChitChat::Event',
-                  join_table: :participations,
+                  join_table: :participant_events,
+                  left_key: :account_id, right_key: :event_id
+    many_to_many  :applied_events,
+                  class: :'ChitChat::Event',
+                  join_table: :applicant_events,
                   left_key: :account_id, right_key: :event_id
     plugin :whitelist_security
     set_allowed_columns :username, :email, :password

@@ -15,7 +15,7 @@ module ChitChat
 
       raise ForbiddenError unless policy.can_cancel?
 
-      Participation.where(account_id: account.id, event_id: event.id).delete
+      event.remove_applicant(account)
 
       account
     end

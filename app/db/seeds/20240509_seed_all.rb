@@ -17,8 +17,10 @@ DATA = {
   accounts: YAML.load_file("#{DIR}/accounts_seed.yml"),
   postits: YAML.load_file("#{DIR}/postits_seed.yml"),
   events: YAML.load_file("#{DIR}/events_seed.yml"),
-  co_organizations: YAML.load_file("#{DIR}/co_organizations_seed.yml"),
-  participations: YAML.load_file("#{DIR}/participations_seed.yml")
+  organizer_events: YAML.load_file("#{DIR}/organizer_events_seed.yml"),
+  co_organizers: YAML.load_file("#{DIR}/co_organizers_seed.yml"),
+  participants: YAML.load_file("#{DIR}/participants_seed.yml"),
+  applicants: YAML.load_file("#{DIR}/applicants_seed.yml")
 }.freeze
 
 def create_accounts
@@ -28,13 +30,15 @@ def create_accounts
 end
 
 def create_events
-  DATA[:events].each do |event_data|
-    organizer_name = event_data['organizer_name']
-    event_data.delete('organizer_name')
-    ChitChat::CreateEventForOrganizer.call(
-      organizer_id: ChitChat::Account.first(username: organizer_name).id,
-      event_data:
-    )
+  DATA[:organizer_events].each do |organizer|
+    account = ChitChat::Account.first(username: organizer['username'])
+    organizer['eventname'].each do |eventname|
+      event_data = DATA[:events].find { |event| event['name'] == eventname }
+      ChitChat::CreateEventForOrganizer.call(
+        organizer_id: account.id,
+        event_data:
+      )
+    end
   end
 end
 
@@ -48,7 +52,7 @@ def create_owned_postits
 end
 
 def add_co_organizers
-  DATA[:co_organizations].each do |co_org|
+  DATA[:co_organizers].each do |co_org|
     account = ChitChat::Account.first(username: co_org['username'])
     event = ChitChat::Event.first(name: co_org['eventname'])
     event.add_co_organizer(account)
@@ -56,10 +60,17 @@ def add_co_organizers
 end
 
 def add_participants
-  DATA[:participations].each do |participant|
+  DATA[:participants].each do |participant|
     account = ChitChat::Account.first(username: participant['username'])
     event = ChitChat::Event.first(name: participant['eventname'])
-    approved = participant['approved']
-    ChitChat::Participation.create(account_id: account.id, event_id: event.id, approved:)
+    event.add_participant(account)
+  end
+end
+
+def add_applicants
+  DATA[:applicants].each do |participant|
+    account = ChitChat::Account.first(username: participant['username'])
+    event = ChitChat::Event.first(name: participant['eventname'])
+    event.add_applicant(account)
   end
 end
