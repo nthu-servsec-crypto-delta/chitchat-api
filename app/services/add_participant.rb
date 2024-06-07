@@ -17,6 +17,8 @@ module ChitChat
       raise ForbiddenError unless policy.can_approve?
 
       event.add_participant(invitee)
+      # TODO: determine if this is the right place to remove the applicant
+      event.remove_applicant(invitee)
 
       invitee
     end
