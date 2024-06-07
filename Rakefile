@@ -32,6 +32,8 @@ namespace :spec do
   end
 end
 
+task :spec => 'spec:all'
+
 desc 'Runs rubocop on tested code'
 task :style => [:spec, :audit] do
   sh 'rubocop . --parallel'
