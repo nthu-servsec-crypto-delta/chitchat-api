@@ -25,7 +25,7 @@ module ChitChat
     private
 
     def target_is_participant?
-      @event.participant.include?(@target_account)
+      @event.participants.include?(@target_account)
     end
   end
 end
