@@ -129,10 +129,7 @@ module ChitChat
           response.status = 200
           raise('Event not found') unless @event
 
-          {
-            data: @event.to_json,
-            policies: EventPolicy.new(@auth_account, @event).summary.to_json
-          }.to_json
+          @event.to_h.merge(policies: EventPolicy.new(@auth_account, @event).summary).to_json
         rescue StandardError => e
           routing.halt 404, { message: e.message }
         end

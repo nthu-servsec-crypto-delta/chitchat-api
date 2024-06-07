@@ -31,23 +31,27 @@ module ChitChat
     set_allowed_columns :name, :description, :location, :radius, :start_time, :end_time
     serialize_attributes :location_s, :location
 
-    def to_json(options = {}) # rubocop:disable Metrics/MethodLength
+    def to_h # rubocop:disable Metrics/MethodLength
+      {
+        type: 'event',
+        attributes: {
+          id:,
+          name:,
+          description:,
+          location:,
+          radius:,
+          start_time:,
+          end_time:,
+          organizer:,
+          co_organizers:,
+          participants:
+        }
+      }
+    end
+
+    def to_json(options = {})
       JSON(
-        {
-          type: 'event',
-          attributes: {
-            id:,
-            name:,
-            description:,
-            location:,
-            radius:,
-            start_time:,
-            end_time:,
-            organizer:,
-            co_organizers:,
-            participants:
-          }
-        },
+        to_h,
         options
       )
     end
