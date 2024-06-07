@@ -137,13 +137,13 @@ module ChitChat
         # PUT api/v1/events/[event_id]
         routing.put do
           req_data = JSON.parse(routing.body.read)
-          @event.update_fields(req_data, %w[name description location radius start_time end_time])
-
-          response.status = 200
+          EditEvent.call(account: @auth_account, event: @event, new_event_data: req_data)
           { message: 'Event updated' }.to_json
         rescue Sequel::MassAssignmentRestriction
           Api.logger.warn "MASS-ASSIGNMENT(Events): #{req_data.keys}"
           routing.halt 400, { message: 'Illegal Attributes' }
+        rescue EditEvent::ForbiddenError => e
+          routing.halt 403, { message: e.message }
         rescue StandardError => e
           Api.logger.error "UNKNOWN ERROR: #{e.message}"
           routing.halt 500, { message: 'Unknown error' }
