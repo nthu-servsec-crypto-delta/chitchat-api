@@ -133,6 +133,21 @@ module ChitChat
         rescue StandardError => e
           routing.halt 404, { message: e.message }
         end
+
+        # PUT api/v1/events/[event_id]
+        routing.put do
+          req_data = JSON.parse(routing.body.read)
+          @event.update_fields(req_data, %w[name description location radius start_time end_time])
+
+          response.status = 200
+          { message: 'Event updated' }.to_json
+        rescue Sequel::MassAssignmentRestriction
+          Api.logger.warn "MASS-ASSIGNMENT(Events): #{req_data.keys}"
+          routing.halt 400, { message: 'Illegal Attributes' }
+        rescue StandardError => e
+          Api.logger.error "UNKNOWN ERROR: #{e.message}"
+          routing.halt 500, { message: 'Unknown error' }
+        end
       end
 
       routing.is do
