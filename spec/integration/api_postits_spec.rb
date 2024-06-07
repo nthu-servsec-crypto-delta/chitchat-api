@@ -6,25 +6,21 @@ describe 'Test postits API' do
   before do
     wipe_database
 
+    @account_data = DATA[:accounts][0]
+    account = ChitChat::Account.create(@account_data)
+    postit1 = ChitChat::Postit.new(DATA[:postits][0])
+    postit2 = ChitChat::Postit.new(DATA[:postits][1])
+    account.add_owned_postit(postit1)
+    account.add_owned_postit(postit2)
+
     DATA[:postits].each do |postit_data|
       ChitChat::Postit.create(postit_data)
     end
   end
 
   describe 'Getting list of postits' do
-    before do
-      @account_data = DATA[:accounts][0]
-      account = ChitChat::Account.create(@account_data)
-      account.add_owned_postit(DATA[:postits][0])
-      account.add_owned_postit(DATA[:postits][1])
-    end
-
     it 'HAPPY: should get list for authorized account' do
-      auth = ChitChat::AuthenticateAccount.call(
-        username: @account_data['username'],
-        password: @account_data['password']
-      )
-      header 'AUTHORIZATION', "Bearer #{auth[:attributes][:auth_token]}"
+      header 'AUTHORIZATION', auth_header(@account_data)
       get 'api/v1/postits'
       _(last_response.status).must_equal 200
 
@@ -73,6 +69,7 @@ describe 'Test postits API' do
 
   it 'HAPPY: should be able to create new postits' do
     req_header = { 'CONTENT_TYPE' => 'application/json' }
+    header 'AUTHORIZATION', auth_header(@account_data)
     post 'api/v1/postits', DATA[:postits][1].to_json, req_header
 
     _(last_response.status).must_equal 201

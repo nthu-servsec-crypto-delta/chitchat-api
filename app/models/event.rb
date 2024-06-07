@@ -16,20 +16,46 @@ Sequel::Plugins::Serialization.register_format(
 module ChitChat
   # Event Model
   class Event < Sequel::Model
-    many_to_many :accounts, join_table: :participations, left_key: :event_id, right_key: :account_id
+    many_to_one :organizer, class: :'ChitChat::Account'
+    many_to_many :co_organizers, class: :'ChitChat::Account',
+                                 join_table: :co_organizers_events,
+                                 left_key: :event_id, right_key: :account_id
+    many_to_many :participants, class: :'ChitChat::Account',
+                                join_table: :participants_events,
+                                left_key: :event_id, right_key: :account_id
+    many_to_many :applicants, class: :'ChitChat::Account',
+                              join_table: :applicants_events,
+                              left_key: :event_id, right_key: :account_id
 
     plugin :timestamps
     plugin :serialization
     plugin :whitelist_security
 
-    set_allowed_columns :name, :description, :location
+    set_allowed_columns :name, :description, :location, :radius, :start_time, :end_time
     serialize_attributes :location_s, :location
+
+    def to_h # rubocop:disable Metrics/MethodLength
+      {
+        type: 'event',
+        attributes: {
+          id:,
+          name:,
+          description:,
+          location:,
+          radius:,
+          start_time:,
+          end_time:,
+          organizer:,
+          co_organizers:,
+          participants:,
+          applicants:
+        }
+      }
+    end
 
     def to_json(options = {})
       JSON(
-        {
-          id:, name:, description:, location:
-        },
+        to_h,
         options
       )
     end

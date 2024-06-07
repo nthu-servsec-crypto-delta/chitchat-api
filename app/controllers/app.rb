@@ -8,6 +8,7 @@ module ChitChat
   # Main App
   class Api < Roda
     plugin :halt
+    plugin :all_verbs
     plugin :json
     plugin :multi_route
     plugin :request_headers

@@ -1,0 +1,11 @@
+---
+- username: tony
+  eventname: 
+  - "AsiaBSDCon 2024"
+  - "AIS3"
+- username: hank
+  eventname: 
+  - "Free Lunch"
+- username: soumya.ray
+  eventname: 
+  - "Docker Workshop"

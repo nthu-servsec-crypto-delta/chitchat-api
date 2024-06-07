@@ -4,27 +4,46 @@ Sequel.seed(:development) do
   def run
     puts 'Seeding accounts, postits and events...'
     create_accounts
-    create_owned_postits
     create_events
+    create_owned_postits
+    add_co_organizers
     add_participants
   end
 end
 
 require 'yaml'
 DIR = File.dirname(__FILE__)
-ACCOUNTS_INFO = YAML.load_file("#{DIR}/accounts_seed.yml")
-POSTITS_INFO = YAML.load_file("#{DIR}/postits_seed.yml")
-EVENTS_INFO = YAML.load_file("#{DIR}/events_seed.yml")
-PARTICIPANTS_INFO = YAML.load_file("#{DIR}/participations_seed.yml")
+DATA = {
+  accounts: YAML.load_file("#{DIR}/accounts_seed.yml"),
+  postits: YAML.load_file("#{DIR}/postits_seed.yml"),
+  events: YAML.load_file("#{DIR}/events_seed.yml"),
+  organizer_events: YAML.load_file("#{DIR}/organizer_events_seed.yml"),
+  co_organizers: YAML.load_file("#{DIR}/co_organizers_seed.yml"),
+  participants: YAML.load_file("#{DIR}/participants_seed.yml"),
+  applicants: YAML.load_file("#{DIR}/applicants_seed.yml")
+}.freeze
 
 def create_accounts
-  ACCOUNTS_INFO.each do |account_info|
+  DATA[:accounts].each do |account_info|
     ChitChat::Account.create(account_info)
   end
 end
 
+def create_events
+  DATA[:organizer_events].each do |organizer|
+    account = ChitChat::Account.first(username: organizer['username'])
+    organizer['eventname'].each do |eventname|
+      event_data = DATA[:events].find { |event| event['name'] == eventname }
+      ChitChat::CreateEventForOrganizer.call(
+        organizer_id: account.id,
+        event_data:
+      )
+    end
+  end
+end
+
 def create_owned_postits
-  POSTITS_INFO.each do |postit|
+  DATA[:postits].each do |postit|
     account = ChitChat::Account.first(username: postit['username'])
     postit.delete('username')
     p = ChitChat::Postit.create(postit)
@@ -32,16 +51,26 @@ def create_owned_postits
   end
 end
 
-def create_events
-  EVENTS_INFO.each do |event|
-    ChitChat::Event.create(event)
+def add_co_organizers
+  DATA[:co_organizers].each do |co_org|
+    account = ChitChat::Account.first(username: co_org['username'])
+    event = ChitChat::Event.first(name: co_org['eventname'])
+    event.add_co_organizer(account)
   end
 end
 
 def add_participants
-  PARTICIPANTS_INFO.each do |participant|
+  DATA[:participants].each do |participant|
     account = ChitChat::Account.first(username: participant['username'])
     event = ChitChat::Event.first(name: participant['eventname'])
-    ChitChat::Participation.create(account_id: account.id, event_id: event.id, role: participant['role'])
+    event.add_participant(account)
+  end
+end
+
+def add_applicants
+  DATA[:applicants].each do |participant|
+    account = ChitChat::Account.first(username: participant['username'])
+    event = ChitChat::Event.first(name: participant['eventname'])
+    event.add_applicant(account)
   end
 end

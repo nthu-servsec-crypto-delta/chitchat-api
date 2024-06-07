@@ -12,17 +12,28 @@ require_relative 'app_test_loader'
 
 def wipe_database
   # Remove table with foreign constraints first
-  ChitChat::Participation.map(&:destroy)
-  ChitChat::Postit.map(&:destroy)
-  ChitChat::Event.map(&:destroy)
-  ChitChat::Account.map(&:destroy)
+  app.DB.tables.sort_by { |table| -app.DB.foreign_key_list(table).length }.each do |table|
+    app.DB[table].delete
+  end
 end
 
+def auth_header(account_data)
+  auth = ChitChat::AuthenticateAccount.call(
+    username: account_data['username'],
+    password: account_data['password']
+  )
+
+  "Bearer #{auth[:attributes][:auth_token]}"
+end
+
+DIR = 'app/db/seeds'
 DATA = {
-  accounts: YAML.safe_load_file('app/db/seeds/accounts_seed.yml'),
-  postits: YAML.safe_load_file('app/db/seeds/postits_seed.yml'),
-  events: YAML.safe_load_file('app/db/seeds/events_seed.yml'),
-  participations: YAML.safe_load_file('app/db/seeds/participations_seed.yml')
+  accounts: YAML.load_file("#{DIR}/accounts_seed.yml"),
+  postits: YAML.load_file("#{DIR}/postits_seed.yml"),
+  events: YAML.load_file("#{DIR}/events_seed.yml"),
+  co_organizers: YAML.load_file("#{DIR}/co_organizers_seed.yml"),
+  participants: YAML.load_file("#{DIR}/participants_seed.yml"),
+  applicants: YAML.load_file("#{DIR}/applicants_seed.yml")
 }.freeze
 
 MASS_ASSIGNMENT_POSTIT = {
