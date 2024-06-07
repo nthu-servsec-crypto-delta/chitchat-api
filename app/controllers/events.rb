@@ -148,6 +148,16 @@ module ChitChat
           Api.logger.error "UNKNOWN ERROR: #{e.message}"
           routing.halt 500, { message: 'Unknown error' }
         end
+
+        # DELETE api/v1/events/[event_id]
+        routing.delete do
+          DeleteEvent.call(account: @auth_account, event: @event)
+          { message: 'Event deleted' }.to_json
+        rescue DeleteEvent::ForbiddenError => e
+          routing.halt 403, { message: e.message }
+        rescue StandardError
+          routing.halt 500, { message: 'Unknown error' }.to_json
+        end
       end
 
       routing.is do
