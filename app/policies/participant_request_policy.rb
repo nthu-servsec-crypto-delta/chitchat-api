@@ -22,6 +22,11 @@ module ChitChat
       @requestor.can_remove_co_organizers? && target_is_participant?
     end
 
+    # If account is participant of current_event, this is a leave request
+    def can_leave?
+      @requestor.can_leave? && target_is_participant?
+    end
+
     private
 
     def target_is_participant?

@@ -14,7 +14,7 @@ module ChitChat
       participant = Account.first(email: participant_email)
       policy = ParticipantRequestPolicy.new(event, account, participant)
 
-      raise ForbiddenError unless policy.can_remove?
+      raise ForbiddenError unless policy.can_remove? || policy.can_leave?
 
       event.remove_participant(participant)
       participant
