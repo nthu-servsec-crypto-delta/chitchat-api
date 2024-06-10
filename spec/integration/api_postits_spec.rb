@@ -44,7 +44,7 @@ describe 'Test postits API' do
     result = JSON.parse last_response.body
 
     _(last_response.status).must_equal 200
-    _(result['id']).must_equal postit.id
+    _(result['attributes']['id']).must_equal postit.id
   end
 
   it 'SAD: should return error if unknown postit requested' do
