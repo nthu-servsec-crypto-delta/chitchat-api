@@ -6,6 +6,7 @@ Sequel.migration do
   change do
     create_table(:postits) do
       primary_key :id
+      foreign_key :event_id, :events
       foreign_key :owner_id, :accounts
 
       String :message_secure, null: false, default: ''

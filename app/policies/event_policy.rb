@@ -25,6 +25,14 @@ module ChitChat
       account_is_co_organizer? || account_is_participant?
     end
 
+    def can_create_postit?
+      account_is_organizer? || account_is_co_organizer? || account_is_participant?
+    end
+
+    def can_view_postits?
+      account_is_organizer? || account_is_co_organizer? || account_is_participant?
+    end
+
     def can_add_co_organizers?
       account_is_organizer?
     end

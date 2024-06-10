@@ -115,6 +115,36 @@ module ChitChat
           end
         end
 
+        routing.on('postits') do
+          # GET api/v1/events/[event_id]/postits
+          routing.get do
+            postits = ChitChat::GetPostitsQuery.call(requestor: @auth_account, event: @event).to_json
+            { data: postits }.to_json
+          rescue StandardError
+            routing.halt 403, { message: 'Could not find any postits' }.to_json
+          end
+
+          # POST api/v1/events/[event_id]/postits/
+          routing.post do
+            new_data = JSON.parse(routing.body.read)
+            new_postit = ChitChat::CreatePostitForEvent.call(
+              account: @auth_account,
+              event: @event,
+              postit_data: new_data
+            )
+            response.status = 201
+            { message: 'Postit created', id: new_postit.id }
+          rescue ChitChat::CreatePostitForEvent::ForbiddenError
+            routing.halt 403, { message: 'Forbidden' }
+          rescue Sequel::MassAssignmentRestriction
+            Api.logger.warn "MASS-ASSIGNMENT(POSTIT): #{new_data.keys}"
+            routing.halt 400, { message: 'Illegal Attributes' }
+          rescue StandardError => e
+            Api.logger.error "UNKNOWN ERROR: #{e.message}"
+            routing.halt 500, { message: 'Unknown server error' }
+          end
+        end
+
         # GET api/v1/events/[event_id]/accounts
         routing.get 'accounts' do
           response.status = 200
