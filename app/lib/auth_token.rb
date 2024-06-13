@@ -2,6 +2,7 @@
 
 require 'base64'
 require_relative 'securable'
+require_relative 'auth_scope'
 
 ## Token and Detokenize Authorization Information
 # Usage examples:
@@ -52,12 +53,11 @@ class AuthToken
 
   # Create a token from a Hash payload
   def self.create(payload, scope = AuthScope.new, expiration = ONE_WEEK)
-    contents = {
+    tokenize(
       'payload' => payload,
       'scope' => scope,
       'exp' => expires(expiration)
-    }
-    AuthToken.new(tokenize(contents))
+    )
   end
 
   def self.expires(expiration)
