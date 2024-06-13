@@ -40,6 +40,23 @@ module ChitChat
           routing.halt '403', { message: 'Invalid credentials' }.to_json
         end
       end
+
+      routing.on 'sso' do
+        routing.is 'github' do
+          # POST /api/v1/auth/sso/github
+          routing.post do
+            code = JSON.parse(request.body.read, symbolize_names: true)[:code]
+            auth_account = GitHubOAuthAccount.new(Api.config).call(code)
+            auth_account.to_json
+          rescue GitHubOAuthAccount::UnauthorizedError => e
+            routing.halt '403', { message: e.message }.to_json
+          rescue StandardError => e
+            Api.logger.error "Could not authenticate with GitHub: #{e.inspect}"
+            Api.logger.error e.backtrace.join("\n")
+            routing.halt 500, { message: 'Server Error' }.to_json
+          end
+        end
+      end
     end
   end
 end
