@@ -34,10 +34,8 @@ def create_events
     account = ChitChat::Account.first(username: organizer['username'])
     organizer['eventname'].each do |eventname|
       event_data = DATA[:events].find { |event| event['name'] == eventname }
-      ChitChat::CreateEventForOrganizer.call(
-        organizer_id: account.id,
-        event_data:
-      )
+      event = ChitChat::Event.create(event_data)
+      account.add_owned_event(event)
     end
   end
 end
