@@ -16,8 +16,10 @@ describe 'Test Co-organizer Handling' do
     @wrong_account_data = DATA[:accounts][2]
     @wrong_account = ChitChat::Account.create(@wrong_account_data)
 
+    auth = authorization(@organizer_data)
+
     ChitChat::CreateEventForOrganizer.call(
-      organizer_id: @organizer.id,
+      auth: auth,
       event_data: DATA[:events][0]
     )
 

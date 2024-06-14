@@ -18,8 +18,10 @@ describe 'Test events API' do
 
     header 'CONTENT_TYPE', 'application/json'
 
+    auth = authorization(@account_data)
+
     ChitChat::CreateEventForOrganizer.call(
-      organizer_id: @account.id,
+      auth: auth,
       event_data: DATA[:events][0]
     )
 

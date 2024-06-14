@@ -3,12 +3,17 @@
 module ChitChat
   # Edit an existing event
   class EditEvent
-    class ForbiddenError < StandardError; end
+    # Custom error for when a user is not allowed to edit an event
+    class ForbiddenError < StandardError
+      def message
+        'You are not allowed to edit events'
+      end
+    end
 
-    def self.call(account:, event:, new_event_data:)
-      policy = EventPolicy.new(account, event)
+    def self.call(auth:, event:, new_event_data:)
+      policy = EventPolicy.new(auth[:account], event)
 
-      raise ForbiddenError, 'You are not allowed to edit that event' unless policy.can_edit?
+      raise ForbiddenError unless policy.can_edit?
 
       event.update_fields(new_event_data, %w[name description location radius start_time end_time])
     end
