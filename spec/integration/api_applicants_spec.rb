@@ -8,49 +8,35 @@ describe 'Test Co-organizer Handling' do
   before do
     wipe_database
     @account_data = DATA[:accounts][0]
-    @another_account_data = DATA[:accounts][1]
-    @wrong_account_data = DATA[:accounts][2]
-
     @account = ChitChat::Account.create(@account_data)
-    @another_account = ChitChat::Account.create(@another_account_data)
-    @wrong_account = ChitChat::Account.create(@wrong_account_data)
 
-    ChitChat::CreateEventForOrganizer.call(
-      organizer_id: @account.id,
-      event_data: DATA[:events][0]
-    )
-
-    @event = ChitChat::Event.find(name: DATA[:events][0]['name'])
-
+    @event = ChitChat::Event.create(DATA[:events][0])
     header 'CONTENT_TYPE', 'application/json'
   end
 
   describe 'Adding applicants to a event' do
     it 'HAPPY: should add a application' do
-      header 'AUTHORIZATION', auth_header(@another_account_data)
+      header 'AUTHORIZATION', auth_header(@account_data)
 
       put "api/v1/events/#{@event.id}/applicants", {}
 
       added = JSON.parse(last_response.body)['data']['attributes']
 
       _(last_response.status).must_equal 200
-      _(added['username']).must_equal @another_account.username
+      _(added['username']).must_equal @account.username
     end
 
     it 'HAPPY: should remove a application' do
-      ChitChat::AddApplicant.call(
-        event: @event,
-        account: @another_account
-      )
+      @event.add_applicant(@account)
 
-      header 'AUTHORIZATION', auth_header(@another_account_data)
+      header 'AUTHORIZATION', auth_header(@account_data)
 
       delete "api/v1/events/#{@event.id}/applicants", {}
 
       added = JSON.parse(last_response.body)['data']['attributes']
 
       _(last_response.status).must_equal 200
-      _(added['username']).must_equal @another_account.username
+      _(added['username']).must_equal @account.username
     end
   end
 end

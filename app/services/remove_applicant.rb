@@ -10,14 +10,14 @@ module ChitChat
       end
     end
 
-    def self.call(account:, event:)
-      policy = ApplicantRequestPolicy.new(event, account)
+    def self.call(auth:, event:)
+      policy = ApplicantRequestPolicy.new(event, auth[:account], auth[:scope])
 
       raise ForbiddenError unless policy.can_cancel?
 
-      event.remove_applicant(account)
+      event.remove_applicant(auth[:account])
 
-      account
+      auth[:account]
     end
   end
 end

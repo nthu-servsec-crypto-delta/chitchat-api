@@ -59,8 +59,8 @@ module ChitChat
           # PUT api/v1/events/[event_id]/applicants
           routing.put do
             applicant = AddApplicant.call(
-              account: @auth_account,
-              event: @event
+              event: @event,
+              auth: @auth
             )
             { data: applicant }.to_json
           rescue AddApplicant::ForbiddenError => e
@@ -72,8 +72,8 @@ module ChitChat
           # DELETE api/v1/events/[event_id]/applicants
           routing.delete do
             applicant = RemoveApplicant.call(
-              account: @auth_account,
-              event: @event
+              event: @event,
+              auth: @auth
             )
             { data: applicant }.to_json
           rescue RemoveApplicant::ForbiddenError => e
