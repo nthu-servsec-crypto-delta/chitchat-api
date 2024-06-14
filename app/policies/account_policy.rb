@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module ChitChat
   # determine if an account
   class AccountPolicy

@@ -21,7 +21,7 @@ describe 'Test events API' do
     auth = authorization(@account_data)
 
     ChitChat::CreateEventForOrganizer.call(
-      auth: auth,
+      auth:,
       event_data: DATA[:events][0]
     )
 

@@ -30,10 +30,11 @@ describe 'Test Participant Handling' do
       auth = authenticate(@account_data)
 
       _(proc {
-      ChitChat::AddApplicant.call(
-        event: @event,
-        auth:
-      )}).must_raise(ChitChat::AddApplicant::ForbiddenError)
+        ChitChat::AddApplicant.call(
+          event: @event,
+          auth:
+        )
+      }).must_raise(ChitChat::AddApplicant::ForbiddenError)
     end
   end
 end

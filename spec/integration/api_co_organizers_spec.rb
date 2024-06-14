@@ -19,7 +19,7 @@ describe 'Test Co-organizer Handling' do
     auth = authorization(@organizer_data)
 
     ChitChat::CreateEventForOrganizer.call(
-      auth: auth,
+      auth:,
       event_data: DATA[:events][0]
     )
 

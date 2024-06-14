@@ -11,7 +11,7 @@ describe 'Test AddCoOrganizer Service' do
     auth = authorization(@organizer_data)
 
     ChitChat::CreateEventForOrganizer.call(
-      auth: auth,
+      auth:,
       event_data: DATA[:events][0]
     )
     @account_data = DATA[:accounts][1]

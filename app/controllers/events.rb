@@ -50,7 +50,7 @@ module ChitChat
               data: co_organizer }.to_json
           rescue RemoveCoOrganizer::ForbiddenError => e
             routing.halt 403, { message: e.message }.to_json
-          rescue StandardError => e
+          rescue StandardError
             routing.halt 500, { message: 'API server error' }.to_json
           end
         end
