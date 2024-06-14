@@ -118,7 +118,10 @@ module ChitChat
         routing.on('postits') do
           # GET api/v1/events/[event_id]/postits
           routing.get do
-            postits = ChitChat::GetPostitsQuery.call(requestor: @auth_account, event: @event).to_json
+            postits = ChitChat::GetPostitsQuery.call(
+              auth: @auth,
+              event: @event
+            )
             { data: postits }.to_json
           rescue StandardError
             routing.halt 403, { message: 'Could not find any postits' }.to_json
@@ -128,8 +131,8 @@ module ChitChat
           routing.post do
             new_data = JSON.parse(routing.body.read)
             new_postit = ChitChat::CreatePostitForEvent.call(
-              account: @auth_account,
               event: @event,
+              auth: @auth,
               postit_data: new_data
             )
             response.status = 201

@@ -7,29 +7,21 @@ describe 'Test postits API' do
     wipe_database
 
     @account_data = DATA[:accounts][0]
-    @another_account_data = DATA[:accounts][1]
-
     @account = ChitChat::Account.create(@account_data)
+
+    @another_account_data = DATA[:accounts][1]
     @another_account = ChitChat::Account.create(@another_account_data)
 
-    ChitChat::CreateEventForOrganizer.call(
-      organizer_id: @account.id,
-      event_data: DATA[:events][0]
-    )
+    @event = ChitChat::Event.create(DATA[:events][0])
+    @account.add_owned_event(@event)
 
-    @event = ChitChat::Event.find(name: DATA[:events][0]['name'])
+    @postit1 = ChitChat::Postit.create(DATA[:postits][0])
+    @event.add_postit(@postit1)
+    @account.add_owned_postit(@postit1)
 
-    ChitChat::CreatePostitForEvent.call(
-      account: @account,
-      event: @event,
-      postit_data: DATA[:postits][0]
-    )
-
-    ChitChat::CreatePostitForEvent.call(
-      account: @account,
-      event: @event,
-      postit_data: DATA[:postits][1]
-    )
+    @postit2 = ChitChat::Postit.create(DATA[:postits][1])
+    @event.add_postit(@postit2)
+    @account.add_owned_postit(@postit2)
   end
 
   describe 'Getting list of postits' do
@@ -39,8 +31,7 @@ describe 'Test postits API' do
       _(last_response.status).must_equal 200
 
       result = JSON.parse last_response.body
-      # The serialization of postit.location requires result['data'] to be parsed again
-      _(JSON.parse(result['data']).count).must_equal 2
+      _(result['data'].count).must_equal 2
     end
 
     it 'BAD: should not process for unauthorized account' do

@@ -5,14 +5,14 @@ module ChitChat
   class CreatePostitForEvent
     class ForbiddenError < StandardError; end
 
-    def self.call(account:, event:, postit_data:)
+    def self.call(auth:, event:, postit_data:)
       # make sure the acount is in the event
-      policy = EventPolicy.new(account, event)
+      policy = EventPolicy.new(auth[:account], event, auth[:scope])
 
       raise ForbiddenError unless policy.can_create_postit?
 
       postit = Postit.new(postit_data)
-      account.add_owned_postit(postit)
+      auth[:account].add_owned_postit(postit)
       event.add_postit(postit)
 
       postit

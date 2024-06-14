@@ -5,20 +5,21 @@ require_relative '../spec_common'
 describe 'Test AddPostits Service' do
   before do
     wipe_database
+    @organizer_data = DATA[:accounts][0]
+    @organizer = ChitChat::Account.create(@organizer_data)
 
-    @organizer = ChitChat::Account.create(DATA[:accounts][0])
-    @random_account = ChitChat::Account.create(DATA[:accounts][1])
-    ChitChat::CreateEventForOrganizer.call(
-      organizer_id: @organizer.id,
-      event_data: DATA[:events][0]
-    )
-    @event = ChitChat::Event.find(name: DATA[:events][0]['name'])
+    @account_data = DATA[:accounts][1]
+    @account = ChitChat::Account.create(@account_data)
+
+    @event = ChitChat::Event.create(DATA[:events][0])
+    @organizer.add_owned_event(@event)
   end
 
   it 'HAPPY: should be able to create postit if in event' do
+    auth = authorization(@organizer_data)
     ChitChat::CreatePostitForEvent.call(
-      account: @organizer,
       event: @event,
+      auth:,
       postit_data: DATA[:postits][0]
     )
     _(@event.postits.size).must_equal 1
@@ -26,10 +27,11 @@ describe 'Test AddPostits Service' do
   end
 
   it 'SAD: should not be able to create postit if account not in event' do
+    auth = authorization(@account_data)
     _(proc {
       ChitChat::CreatePostitForEvent.call(
-        account: @random_account,
         event: @event,
+        auth:,
         postit_data: DATA[:postits][0]
       )
     }).must_raise ChitChat::CreatePostitForEvent::ForbiddenError
