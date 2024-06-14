@@ -6,18 +6,18 @@ module ChitChat
     # Error for owner cannot be co-organizer
     class ForbiddenError < StandardError
       def message
-        'You are not allowed to invite that person as co-organizer'
+        'You are not allowed to invite that person as participant'
       end
     end
 
-    def self.call(account:, event:, participant_email:)
+    def self.call(auth:, event:, participant_email:)
       invitee = Account.first(email: participant_email)
-      policy = ParticipantRequestPolicy.new(event, account, invitee)
+
+      policy = ParticipantRequestPolicy.new(event, auth[:account], invitee, auth[:scope])
 
       raise ForbiddenError unless policy.can_approve?
 
       event.add_participant(invitee)
-      # TODO: determine if this is the right place to remove the applicant
       event.remove_applicant(invitee)
 
       invitee

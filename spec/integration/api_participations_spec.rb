@@ -8,28 +8,24 @@ describe 'Test Participation Handling' do
   before do
     wipe_database
     @account_data = DATA[:accounts][0]
-    @another_account_data = DATA[:accounts][1]
-    @wrong_account_data = DATA[:accounts][2]
-
     @account = ChitChat::Account.create(@account_data)
+
+    @another_account_data = DATA[:accounts][1]
     @another_account = ChitChat::Account.create(@another_account_data)
+
+    @wrong_account_data = DATA[:accounts][2]
     @wrong_account = ChitChat::Account.create(@wrong_account_data)
 
-    ChitChat::CreateEventForOrganizer.call(
-      organizer_id: @account.id,
-      event_data: DATA[:events][0]
-    )
-    @event = ChitChat::Event.find(name: DATA[:events][0]['name'])
+    @event = ChitChat::Event.create(DATA[:events][0])
+    @account.add_owned_event(@event)
 
     header 'CONTENT_TYPE', 'application/json'
   end
 
   describe 'Adding applicants to a event' do
-    it 'HAPPY: should approve a application into a participant' do
-      ChitChat::AddApplicant.call(
-        event: @event,
-        account: @another_account
-      )
+    it 'HAPPY: should approve a applicant into a participant' do
+      @event.add_applicant(@another_account)
+
       header 'AUTHORIZATION', auth_header(@account_data)
 
       req_data = { email: @another_account.email }

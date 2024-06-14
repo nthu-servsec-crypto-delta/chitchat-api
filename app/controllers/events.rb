@@ -88,8 +88,8 @@ module ChitChat
           routing.put do
             req_data = JSON.parse(routing.body.read)
             participant = AddParticipant.call(
-              account: @auth_account,
               event: @event,
+              auth: @auth,
               participant_email: req_data['email']
             )
             { data: participant }.to_json
@@ -103,8 +103,8 @@ module ChitChat
           routing.delete do
             req_data = JSON.parse(routing.body.read)
             participant = RemoveParticipant.call(
-              account: @auth_account,
               event: @event,
+              auth: @auth,
               participant_email: req_data['email']
             )
             { data: participant }.to_json
