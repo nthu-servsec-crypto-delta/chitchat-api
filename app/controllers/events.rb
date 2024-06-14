@@ -27,7 +27,7 @@ module ChitChat
           routing.put do
             req_data = JSON.parse(routing.body.read)
             co_organizer = AddCoOrganizer.call(
-              account: @auth_account,
+              auth: @auth,
               event: @event,
               co_organizer_email: req_data['email']
             )
@@ -42,7 +42,7 @@ module ChitChat
           routing.delete do
             req_data = JSON.parse(routing.body.read)
             co_organizer = RemoveCoOrganizer.call(
-              account: @auth_account,
+              auth: @auth,
               event: @event,
               co_organizer_email: req_data['email']
             )
@@ -50,7 +50,7 @@ module ChitChat
               data: co_organizer }.to_json
           rescue RemoveCoOrganizer::ForbiddenError => e
             routing.halt 403, { message: e.message }.to_json
-          rescue StandardError
+          rescue StandardError => e
             routing.halt 500, { message: 'API server error' }.to_json
           end
         end
