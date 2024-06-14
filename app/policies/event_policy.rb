@@ -3,58 +3,81 @@
 module ChitChat
   # Policy to determine if an account can view a particular project
   class EventPolicy
-    def initialize(account, event)
+    def initialize(account, event, auth_scope = nil)
       @account = account
       @event = event
+      @auth_scope = auth_scope
     end
 
-    # Any one can view an event, but cannot view the accounts/postit in it until approved
     def can_view?
       true
     end
 
     def can_edit?
-      account_is_organizer? || account_is_co_organizer?
+      can_write? && (account_is_organizer? || account_is_co_organizer?)
     end
 
     def can_delete?
-      account_is_organizer?
+      can_write? && account_is_organizer?
     end
 
     def can_leave?
-      account_is_co_organizer? || account_is_participant?
+      can_write? && (account_is_co_organizer? || account_is_participant?)
+    end
+
+    def can_view_accounts?
+      can_read? && (account_is_organizer? || account_is_co_organizer? || account_is_participant?)
+    end
+
+    def can_create_postit?
+      can_write? && (account_is_organizer? || account_is_co_organizer? || account_is_participant?)
+    end
+
+    def can_view_postits?
+      can_read? && (account_is_organizer? || account_is_co_organizer? || account_is_participant?)
     end
 
     def can_add_co_organizers?
-      account_is_organizer?
+      can_write? && account_is_organizer?
     end
 
     def can_remove_co_organizers?
-      account_is_organizer?
+      can_write? && account_is_organizer?
     end
 
     def can_approve_applicants?
-      account_is_organizer? || account_is_co_organizer?
+      can_write? && (account_is_organizer? || account_is_co_organizer?)
     end
 
     def can_reject_applicants?
-      account_is_organizer? || account_is_co_organizer?
+      can_write? && (account_is_organizer? || account_is_co_organizer?)
     end
 
     def can_participate?
-      account_is_applicant? && !(account_is_organizer? || account_is_co_organizer? || account_is_participant?)
+      can_write? &&
+        account_is_applicant? &&
+        !(account_is_organizer? || account_is_co_organizer? || account_is_participant?)
     end
 
     def can_apply?
-      !account_is_organizer? && !account_is_co_organizer? && !account_is_participant? && !account_is_applicant?
+      can_write? &&
+        (!account_is_organizer? && !account_is_co_organizer? && !account_is_participant? && !account_is_applicant?)
     end
 
     def can_cancel?
-      account_is_applicant?
+      can_write? && account_is_applicant?
     end
 
     def can_co_organize?
-      !(account_is_organizer? || account_is_co_organizer?)
+      can_write? && !(account_is_organizer? || account_is_co_organizer?)
+    end
+
+    def can_read?
+      @auth_scope ? @auth_scope.can_read?('events') : false
+    end
+
+    def can_write?
+      @auth_scope ? @auth_scope.can_write?('events') : false
     end
 
     def summary # rubocop:disable Metrics/MethodLength

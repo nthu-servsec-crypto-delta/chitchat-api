@@ -3,12 +3,17 @@
 module ChitChat
   # Delete event
   class DeleteEvent
-    class ForbiddenError < StandardError; end
+    # Error for when a user is not allowed to delete an event
+    class ForbiddenError < StandardError
+      def message
+        'You are not allowed to delete events'
+      end
+    end
 
-    def self.call(account:, event:)
-      policy = EventPolicy.new(account, event)
+    def self.call(auth:, event:)
+      policy = EventPolicy.new(auth[:account], event)
 
-      raise ForbiddenError, 'You are not allowed to delete that event' unless policy.can_delete?
+      raise ForbiddenError unless policy.can_delete?
 
       event.destroy
     end

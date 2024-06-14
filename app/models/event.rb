@@ -26,6 +26,7 @@ module ChitChat
     many_to_many :applicants, class: :'ChitChat::Account',
                               join_table: :applicants_events,
                               left_key: :event_id, right_key: :account_id
+    one_to_many :postits, class: :'ChitChat::Postit'
 
     plugin :timestamps
     plugin :serialization
@@ -48,7 +49,8 @@ module ChitChat
           organizer:,
           co_organizers:,
           participants:,
-          applicants:
+          applicants:,
+          postits:
         }
       }
     end

@@ -15,6 +15,8 @@ module ChitChat
 
     include SecureRequest
 
+    UNAUTH_MSG = { message: 'Unauthorized Request' }.to_json
+
     route do |routing|
       response['Content-Type'] = 'application/json'
 
@@ -22,7 +24,8 @@ module ChitChat
         routing.halt(403, { message: 'TLS/SSL Required' }.to_json)
 
       begin
-        @auth_account = authenticated_account(routing.headers)
+        @auth = authorization(routing.headers)
+        @auth_account = @auth[:account] if @auth
       rescue AuthToken::InvalidTokenError
         routing.halt 403, { message: 'Invalid auth token' }.to_json
       end

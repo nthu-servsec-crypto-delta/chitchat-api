@@ -8,9 +8,11 @@ module ChitChat
       @event = event
     end
 
-    # For now all accounts in an event can view all other accounts
     def viewable
-      [] unless includes_role?(@event, @account)
+      policy = EventPolicy.new(@account, @event)
+
+      [] unless policy.can_view_accounts?
+
       all_accounts(@event)
     end
 
@@ -18,12 +20,6 @@ module ChitChat
 
     def all_accounts(event)
       [event.organizer] + event.co_organizers + event.participants
-    end
-
-    def includes_role?(event, account)
-      event.organizer == account ||
-        event.co_organizers.include?(account) ||
-        event.participants.include?(account)
     end
   end
 end

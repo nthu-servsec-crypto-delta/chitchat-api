@@ -6,33 +6,31 @@ describe 'Test events API' do
   before do
     wipe_database
 
-    @account_data = DATA[:accounts][0]
-    @another_account_data = DATA[:accounts][1]
-    @wrong_account_data = DATA[:accounts][3]
+    @organizer_data = DATA[:accounts][0]
+    @organizer = ChitChat::Account.create(@organizer_data)
 
-    @account = ChitChat::Account.create(@account_data)
-    @another_account = ChitChat::Account.create(@another_account_data)
+    @co_organizer_data = DATA[:accounts][1]
+    @co_organizer = ChitChat::Account.create(@co_organizer_data)
+
+    @wrong_account_data = DATA[:accounts][2]
     @wrong_account = ChitChat::Account.create(@wrong_account_data)
 
     header 'CONTENT_TYPE', 'application/json'
 
+    @event_data = DATA[:events][0]
+
     DATA[:events].each do |event_data|
-      ChitChat::CreateEventForOrganizer.call(
-        organizer_id: @account.id,
-        event_data:
-      )
+      ChitChat::Event.create(event_data)
     end
 
-    ChitChat::AddCoOrganizer.call(
-      account: @account,
-      event: ChitChat::Event.all[1],
-      co_organizer_email: @another_account.email
-    )
+    @event = ChitChat::Event.find(name: @event_data['name'])
+    @organizer.add_owned_event(@event)
+    @event.add_co_organizer(@co_organizer)
   end
 
   describe 'Getting Events' do
     it 'HAPPY: should be able to get list of all events' do
-      header 'AUTHORIZATION', auth_header(@account_data)
+      header 'AUTHORIZATION', auth_header(@organizer_data)
       get '/api/v1/events/all'
       _(last_response.status).must_equal 200
 
@@ -41,7 +39,7 @@ describe 'Test events API' do
     end
 
     it 'HAPPY: should be able to get list of allowed events' do
-      header 'AUTHORIZATION', auth_header(@another_account_data)
+      header 'AUTHORIZATION', auth_header(@co_organizer_data)
       get '/api/v1/events'
       _(last_response.status).must_equal 200
 
@@ -51,12 +49,11 @@ describe 'Test events API' do
   end
 
   it 'HAPPY: should be able to get details of a single event' do
-    event = ChitChat::Event.first
-    get "/api/v1/events/#{event.id}"
+    get "/api/v1/events/#{@event.id}"
     result = JSON.parse last_response.body
 
     _(last_response.status).must_equal 200
-    _(result['attributes']['id']).must_equal event.id
+    _(result['attributes']['id']).must_equal @event.id
   end
 
   it 'SAD: should return error if unknown event requested' do
@@ -68,7 +65,7 @@ describe 'Test events API' do
   it 'SECURITY: should return error if mass assignment attempted' do
     payload = MASS_ASSIGNMENT_EVENT.to_json
     req_header = { 'CONTENT_TYPE' => 'application/json' }
-    header 'AUTHORIZATION', auth_header(@account_data)
+    header 'AUTHORIZATION', auth_header(@organizer_data)
     post 'api/v1/events', payload, req_header
 
     _(last_response.status).must_equal 400
@@ -82,7 +79,7 @@ describe 'Test events API' do
 
   it 'HAPPY: should be able to create new events' do
     req_header = { 'CONTENT_TYPE' => 'application/json' }
-    header 'AUTHORIZATION', auth_header(@account_data)
+    header 'AUTHORIZATION', auth_header(@organizer_data)
     post 'api/v1/events', DATA[:events][1].to_json, req_header
 
     _(last_response.status).must_equal 201

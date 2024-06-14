@@ -27,7 +27,7 @@ module ChitChat
           routing.put do
             req_data = JSON.parse(routing.body.read)
             co_organizer = AddCoOrganizer.call(
-              account: @auth_account,
+              auth: @auth,
               event: @event,
               co_organizer_email: req_data['email']
             )
@@ -42,7 +42,7 @@ module ChitChat
           routing.delete do
             req_data = JSON.parse(routing.body.read)
             co_organizer = RemoveCoOrganizer.call(
-              account: @auth_account,
+              auth: @auth,
               event: @event,
               co_organizer_email: req_data['email']
             )
@@ -59,8 +59,8 @@ module ChitChat
           # PUT api/v1/events/[event_id]/applicants
           routing.put do
             applicant = AddApplicant.call(
-              account: @auth_account,
-              event: @event
+              event: @event,
+              auth: @auth
             )
             { data: applicant }.to_json
           rescue AddApplicant::ForbiddenError => e
@@ -72,8 +72,8 @@ module ChitChat
           # DELETE api/v1/events/[event_id]/applicants
           routing.delete do
             applicant = RemoveApplicant.call(
-              account: @auth_account,
-              event: @event
+              event: @event,
+              auth: @auth
             )
             { data: applicant }.to_json
           rescue RemoveApplicant::ForbiddenError => e
@@ -88,8 +88,8 @@ module ChitChat
           routing.put do
             req_data = JSON.parse(routing.body.read)
             participant = AddParticipant.call(
-              account: @auth_account,
               event: @event,
+              auth: @auth,
               participant_email: req_data['email']
             )
             { data: participant }.to_json
@@ -103,8 +103,8 @@ module ChitChat
           routing.delete do
             req_data = JSON.parse(routing.body.read)
             participant = RemoveParticipant.call(
-              account: @auth_account,
               event: @event,
+              auth: @auth,
               participant_email: req_data['email']
             )
             { data: participant }.to_json
@@ -112,6 +112,39 @@ module ChitChat
             routing.halt 403, { message: e.message }.to_json
           rescue StandardError
             routing.halt 500, { message: 'API server error' }.to_json
+          end
+        end
+
+        routing.on('postits') do
+          # GET api/v1/events/[event_id]/postits
+          routing.get do
+            postits = ChitChat::GetPostitsQuery.call(
+              auth: @auth,
+              event: @event
+            )
+            { data: postits }.to_json
+          rescue StandardError
+            routing.halt 403, { message: 'Could not find any postits' }.to_json
+          end
+
+          # POST api/v1/events/[event_id]/postits/
+          routing.post do
+            new_data = JSON.parse(routing.body.read)
+            new_postit = ChitChat::CreatePostitForEvent.call(
+              event: @event,
+              auth: @auth,
+              postit_data: new_data
+            )
+            response.status = 201
+            { message: 'Postit created', id: new_postit.id }
+          rescue ChitChat::CreatePostitForEvent::ForbiddenError
+            routing.halt 403, { message: 'Forbidden' }
+          rescue Sequel::MassAssignmentRestriction
+            Api.logger.warn "MASS-ASSIGNMENT(POSTIT): #{new_data.keys}"
+            routing.halt 400, { message: 'Illegal Attributes' }
+          rescue StandardError => e
+            Api.logger.error "UNKNOWN ERROR: #{e.message}"
+            routing.halt 500, { message: 'Unknown server error' }
           end
         end
 

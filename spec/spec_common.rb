@@ -17,13 +17,27 @@ def wipe_database
   end
 end
 
-def auth_header(account_data)
-  auth = ChitChat::AuthenticateAccount.call(
+def authenticate(account_data)
+  ChitChat::AuthenticateAccount.call(
     username: account_data['username'],
     password: account_data['password']
   )
+end
 
+def auth_header(account_data)
+  auth = authenticate(account_data)
   "Bearer #{auth[:attributes][:auth_token]}"
+end
+
+def authorization(account_data)
+  auth = authenticate(account_data)
+
+  token = AuthToken.new(auth[:attributes][:auth_token])
+  account = token.payload['attributes']
+  {
+    account: ChitChat::Account.first(username: account['username']),
+    scope: AuthScope.new(token.scope)
+  }
 end
 
 DIR = 'app/db/seeds'

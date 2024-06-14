@@ -10,9 +10,9 @@ module ChitChat
       end
     end
 
-    def self.call(account:, event:, co_organizer_email:)
+    def self.call(auth:, event:, co_organizer_email:)
       co_organizer = Account.first(email: co_organizer_email)
-      policy = CoOrganizerRequestPolicy.new(event, account, co_organizer)
+      policy = CoOrganizerRequestPolicy.new(event, auth[:account], co_organizer, auth[:scope])
 
       raise ForbiddenError unless policy.can_remove?
 

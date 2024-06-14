@@ -16,6 +16,7 @@ module ChitChat
   # Postit with location and message
   class Postit < Sequel::Model
     many_to_one :owner, class: :'ChitChat::Account'
+    many_to_one :event, class: :'ChitChat::Event'
 
     plugin :timestamps
     plugin :serialization
@@ -24,12 +25,19 @@ module ChitChat
 
     serialize_attributes :location_s, :location
 
+    def to_h
+      {
+        type: 'postit',
+        attributes: {
+          id:,
+          location:,
+          message:
+        }
+      }
+    end
+
     def to_json(options = {})
-      JSON(
-        {
-          id:, location:, message:
-        }, options
-      )
+      JSON(to_h, options)
     end
 
     def message
