@@ -1,19 +1,19 @@
 # frozen_string_literal: true
 
 require 'json'
+require 'dry-struct'
+require 'dry-types'
 
 module ChitChat
   # Location Model
-  class Location
-    def initialize(longitude, latitude)
-      @longitude = longitude
-      @latitude = latitude
-    end
+  class Location < Dry::Struct
+    include Dry.Types
 
-    attr_reader :longitude, :latitude
+    attribute :longitude, Coercible::Float
+    attribute :latitude, Coercible::Float
 
     def to_s
-      "<long=#{@longitude} lat=#{@latitude}>"
+      "<long=#{longitude} lat=#{latitude}>"
     end
 
     def to_json(options = {})
@@ -22,8 +22,8 @@ module ChitChat
 
     def to_h(_options = {})
       {
-        longitude: @longitude,
-        latitude: @latitude
+        longitude:,
+        latitude:
       }
     end
 
@@ -33,17 +33,17 @@ module ChitChat
     end
 
     def self.from_json(json)
-      data = JSON.parse(json)
+      data = ::JSON.parse(json)
       Location.from_h(data)
     end
 
     def self.from_h(hash)
-      Location.new(hash['longitude'], hash['latitude'])
+      Location.new(longitude: hash['longitude'], latitude: hash['latitude'])
     end
 
     def distance(location)
       # For simplicity, use Euclidean distance here
-      Math.sqrt(((@longitude - location.longitude)**2) + ((@latitude - location.latitude)**2))
+      Math.sqrt(((longitude - location.longitude)**2) + ((latitude - location.latitude)**2))
     end
 
     def self.distance(location1, location2)

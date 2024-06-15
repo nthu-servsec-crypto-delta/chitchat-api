@@ -8,6 +8,7 @@ gem 'json'
 gem 'puma', '~>6.1'
 gem 'roda', '~>3.1'
 
+gem 'dry-struct'
 gem 'http'
 
 # Configuration
