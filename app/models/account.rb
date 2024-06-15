@@ -37,6 +37,14 @@ module ChitChat
       )
     end
 
+    def location=(new_location)
+      Cache::Client.new(Api.config).set(username, new_location.to_json)
+    end
+
+    def location
+      Cache::Client.new(Api.config).get(username)
+    end
+
     def password=(new_password)
       self.password_digest = PasswordDigest.digest(new_password)
     end

@@ -22,6 +22,17 @@ module ChitChat
         rescue StandardError => e
           routing.halt 404, { message: e.message }.to_json
         end
+
+        routing.on('location') do
+          # PUT api/v1/accounts/[username]/location
+          routing.put do
+            new_location = JSON.parse(routing.body.read)
+            UpdateLocation.call(auth: @auth, location_data: new_location)
+            { message: 'Location updated' }.to_json
+          rescue StandardError => e
+            routing.halt 500, { message: e.message }.to_json
+          end
+        end
       end
 
       # POST api/v1/accounts
