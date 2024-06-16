@@ -17,6 +17,7 @@ describe 'Test AddPostits Service' do
 
   it 'HAPPY: should be able to create postit if in event' do
     auth = authorization(@organizer_data)
+    @organizer.location = @event.location
     ChitChat::CreatePostitForEvent.call(
       event: @event,
       auth:,

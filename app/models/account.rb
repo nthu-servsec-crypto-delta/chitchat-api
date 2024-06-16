@@ -31,7 +31,8 @@ module ChitChat
           type: 'account',
           attributes: {
             username:,
-            email:
+            email:,
+            location:
           }
         }, options
       )
@@ -42,7 +43,8 @@ module ChitChat
     end
 
     def location
-      Cache::Client.new(Api.config).get(username)
+      location_json = Cache::Client.new(Api.config).get(username)
+      location_json ? Location.from_json(location_json) : nil
     end
 
     def password=(new_password)

@@ -15,6 +15,9 @@ def wipe_database
   app.DB.tables.sort_by { |table| -app.DB.foreign_key_list(table).length }.each do |table|
     app.DB[table].delete
   end
+
+  # Clear redis cache
+  ChitChat::Cache::Client.new(ChitChat::Api.config).wipe
 end
 
 def authenticate(account_data)

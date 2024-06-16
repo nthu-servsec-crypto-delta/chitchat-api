@@ -55,6 +55,14 @@ module ChitChat
       }
     end
 
+    def location=(new_location)
+      self[:location] = new_location.to_json
+    end
+
+    def location
+      Location.from_json(self[:location])
+    end
+
     def to_json(options = {})
       JSON(
         to_h,
