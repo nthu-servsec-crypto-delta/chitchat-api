@@ -47,6 +47,7 @@ describe 'Test postits API' do
   it 'HAPPY: should be able to create new postits' do
     req_header = { 'CONTENT_TYPE' => 'application/json' }
     header 'AUTHORIZATION', auth_header(@account_data)
+    @account.location = @event.location
     post "api/v1/events/#{@event.id}/postits", DATA[:postits][1].to_json, req_header
 
     _(last_response.status).must_equal 201

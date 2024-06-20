@@ -26,11 +26,15 @@ module ChitChat
     end
 
     def can_view_accounts?
-      can_read? && (account_is_organizer? || account_is_co_organizer? || account_is_participant?)
+      can_read? &&
+        account_has_location? &&
+        (account_is_organizer? || account_is_co_organizer? || account_is_participant?)
     end
 
     def can_create_postit?
-      can_write? && (account_is_organizer? || account_is_co_organizer? || account_is_participant?)
+      account_in_event_range? &&
+        can_write? &&
+        (account_is_organizer? || account_is_co_organizer? || account_is_participant?)
     end
 
     def can_view_postits?
@@ -96,6 +100,15 @@ module ChitChat
     end
 
     private
+
+    def account_in_event_range?
+      account_has_location? &&
+        @event.location.distance_to(@account.location) < @event.radius
+    end
+
+    def account_has_location?
+      !@account.location.nil?
+    end
 
     def account_is_organizer?
       @event.organizer == @account

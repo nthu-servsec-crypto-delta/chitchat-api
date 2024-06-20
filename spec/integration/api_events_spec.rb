@@ -49,6 +49,7 @@ describe 'Test events API' do
   end
 
   it 'HAPPY: should be able to get details of a single event' do
+    header 'AUTHORIZATION', auth_header(@organizer_data)
     get "/api/v1/events/#{@event.id}"
     result = JSON.parse last_response.body
 

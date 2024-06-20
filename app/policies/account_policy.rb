@@ -9,7 +9,7 @@ module ChitChat
     end
 
     def can_view?
-      self_request?
+      in_same_event?
     end
 
     def can_edit?
@@ -32,6 +32,18 @@ module ChitChat
 
     def self_request?
       @requestor == @this_account
+    end
+
+    def in_same_event?
+      account_events(@requestor).any? do |event|
+        event.organizer == @this_account ||
+          event.co_organizers.include?(@this_account) ||
+          event.participants.include?(@this_account)
+      end
+    end
+
+    def account_events(account)
+      account.owned_events + account.co_organized_events + account.participated_events
     end
   end
 end

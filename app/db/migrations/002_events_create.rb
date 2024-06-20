@@ -11,7 +11,7 @@ Sequel.migration do
       String :name
       String :description
       String :location, null: false
-      String :radius, null: false
+      Integer :radius, null: false
       DateTime :start_time, null: false
       DateTime :end_time, null: false
       TrueClass :needs_approval, default: false

@@ -151,7 +151,7 @@ module ChitChat
         # GET api/v1/events/[event_id]/accounts
         routing.get 'accounts' do
           response.status = 200
-          accounts = EventAccountScope.new(@auth_account, @event).viewable
+          accounts = EventAccountScope.new(@auth_account, @event, @auth[:scope]).viewable
           JSON.pretty_generate(data: accounts)
         rescue StandardError
           routing.halt 500, { message: 'Unknown error' }.to_json
@@ -162,7 +162,9 @@ module ChitChat
           response.status = 200
           raise('Event not found') unless @event
 
-          @event.to_h.merge(policies: EventPolicy.new(@auth_account, @event).summary).to_json
+          @event.to_h.merge(
+            policies: EventPolicy.new(@auth_account, @event, @auth[:scope]).summary
+          ).to_json
         rescue StandardError => e
           routing.halt 404, { message: e.message }
         end
@@ -170,7 +172,7 @@ module ChitChat
         # PUT api/v1/events/[event_id]
         routing.put do
           req_data = JSON.parse(routing.body.read)
-          EditEvent.call(account: @auth_account, event: @event, new_event_data: req_data)
+          EditEvent.call(auth: @auth, event: @event, new_event_data: req_data)
           { message: 'Event updated' }.to_json
         rescue Sequel::MassAssignmentRestriction
           Api.logger.warn "MASS-ASSIGNMENT(Events): #{req_data.keys}"
@@ -184,7 +186,7 @@ module ChitChat
 
         # DELETE api/v1/events/[event_id]
         routing.delete do
-          DeleteEvent.call(account: @auth_account, event: @event)
+          DeleteEvent.call(auth: @auth, event: @event)
           { message: 'Event deleted' }.to_json
         rescue DeleteEvent::ForbiddenError => e
           routing.halt 403, { message: e.message }
