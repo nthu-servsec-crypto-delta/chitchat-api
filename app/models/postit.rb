@@ -31,7 +31,23 @@ module ChitChat
         attributes: {
           id:,
           location:,
-          message:
+          message:,
+          event: event_summary
+        }
+      }
+    end
+
+    def event_summary # rubocop:disable Metrics/MethodLength
+      return nil unless event
+
+      {
+        type: 'event',
+        attributes: {
+          id: event.id,
+          name: event.name,
+          location: event.location,
+          start_time: event.start_time,
+          end_time: event.end_time
         }
       }
     end
