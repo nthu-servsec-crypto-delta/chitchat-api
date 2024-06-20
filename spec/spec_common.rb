@@ -53,6 +53,13 @@ DATA = {
   applicants: YAML.load_file("#{DIR}/applicants_seed.yml")
 }.freeze
 
+BAD_ACCOUNT = {
+  'username' => 'bad_account',
+  'email' => 'bad@nthu.edu.tw',
+  'password' => 'mypa$$w0rd',
+  'created_at' => '1900-01-01'
+}.freeze
+
 MASS_ASSIGNMENT_POSTIT = {
   'id' => 500,
   'location' => { 'latitude' => 0.0, 'longitude' => 0.0 },
