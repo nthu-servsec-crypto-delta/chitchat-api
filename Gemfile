@@ -11,6 +11,8 @@ gem 'roda', '~>3.1'
 gem 'dry-struct'
 gem 'http'
 
+gem 'redis'
+
 # Configuration
 gem 'figaro', '~>1.2'
 gem 'rake'
