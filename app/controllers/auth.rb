@@ -9,15 +9,21 @@ module ChitChat
   # Web controller for Credence API
   class Api < Roda
     route('auth') do |routing|
+      # All requests in this route require signed requests
+      begin
+        @request_data = SignedRequest.new(Api.config).parse(request.body.read)
+      rescue SignedRequest::VerificationError
+        routing.halt '403', { message: 'Must sign request' }.to_json
+      end
+
       routing.is 'register' do
         # POST /api/v1/auth/register
         routing.post do
-          registration_data = JSON.parse(request.body.read, symbolize_names: true)
-          ValidateRegistration.new(registration_data).call
-          SendRegistrationEmail.new(registration_data).call
+          ValidateRegistration.new(@request_data).call
+          SendRegistrationEmail.new(@request_data).call
 
           response.status = 202
-          Api.logger.info("Registration email sent to #{registration_data[:email]}")
+          Api.logger.info("Registration email sent to #{@request_data[:email]}")
           { message: 'Email sent' }.to_json
         rescue ValidateRegistration::InvalidRegistrationError => e
           routing.halt 400, { message: e.message }.to_json
@@ -33,8 +39,7 @@ module ChitChat
       routing.is 'authenticate' do
         # POST /api/v1/auth/authenticate
         routing.post do
-          credentials = JSON.parse(request.body.read, symbolize_names: true)
-          auth_account = AuthenticateAccount.call(credentials)
+          auth_account = AuthenticateAccount.call(@request_data)
           auth_account.to_json
         rescue AuthenticateAccount::UnauthorizedError
           routing.halt '403', { message: 'Invalid credentials' }.to_json
