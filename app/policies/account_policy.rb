@@ -9,7 +9,7 @@ module ChitChat
     end
 
     def can_view?
-      in_same_event?
+      self_request? || in_same_event?
     end
 
     def can_edit?
