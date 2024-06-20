@@ -50,7 +50,7 @@ module ChitChat
         routing.is 'github' do
           # POST /api/v1/auth/sso/github
           routing.post do
-            code = JSON.parse(request.body.read, symbolize_names: true)[:code]
+            code = @request_data[:code]
             auth_account = GitHubOAuthAccount.new(Api.config).call(code)
             auth_account.to_json
           rescue GitHubOAuthAccount::UnauthorizedError => e
