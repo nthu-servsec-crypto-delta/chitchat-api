@@ -11,7 +11,7 @@ module ChitChat
     end
 
     def self.call(auth:, event:, new_event_data:)
-      policy = EventPolicy.new(auth[:account], event)
+      policy = EventPolicy.new(auth[:account], event, auth[:scope])
 
       raise ForbiddenError unless policy.can_edit?
 
