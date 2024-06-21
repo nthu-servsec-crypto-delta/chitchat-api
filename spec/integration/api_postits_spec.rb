@@ -28,7 +28,7 @@ describe 'Test postits API' do
       _(result['data'].count).must_equal 2
     end
 
-    it 'BAD: should not process for unauthorized account' do
+    it 'BAD AUTHORIZATION: should not process for unauthorized account' do
       header 'AUTHORIZATION', 'Bearer bad_token'
       get 'api/v1/postits'
       _(last_response.status).must_equal 403
@@ -53,7 +53,7 @@ describe 'Test postits API' do
     _(last_response.status).must_equal 404
   end
 
-  it 'SECURITY: should return error if there is Mass Assignment attempt' do
+  it 'BAD MASS_ASSIGNMENT: should return error if there is Mass Assignment attempt' do
     payload = MASS_ASSIGNMENT_POSTIT
     req_header = { 'CONTENT_TYPE' => 'application/json' }
     post 'api/v1/postits', payload.to_json, req_header
@@ -61,7 +61,7 @@ describe 'Test postits API' do
     _(last_response.status).must_equal 400
   end
 
-  it 'SECURITY: should prevent SQL injection' do
+  it 'BAD SQL_INJECTION: should prevent SQL injection' do
     get '/api/v1/postits/1%20or%201%3D1'
 
     _(last_response.status).must_equal 404

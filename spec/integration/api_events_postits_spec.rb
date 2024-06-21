@@ -34,7 +34,7 @@ describe 'Test postits API' do
       _(result['data'].count).must_equal 2
     end
 
-    it 'BAD: should not process for unauthorized account' do
+    it 'BAD AUTHORIZATION: should not process for unauthorized account' do
       header 'AUTHORIZATION', auth_header(@another_account_data)
       get "api/v1/events/#{@event.id}/postits"
       _(last_response.status).must_equal 403
@@ -53,7 +53,7 @@ describe 'Test postits API' do
     _(last_response.status).must_equal 201
   end
 
-  it 'SAD: should not be able to create new postits without correct authorization' do
+  it 'SAD AUTHORIZATION: should not be able to create new postits without correct authorization' do
     req_header = { 'CONTENT_TYPE' => 'application/json' }
     header 'AUTHORIZATION', auth_header(@another_account_data)
     post "api/v1/events/#{@event.id}/postits", DATA[:postits][1].to_json, req_header

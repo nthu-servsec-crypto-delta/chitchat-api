@@ -38,7 +38,7 @@ describe 'Test Participation Handling' do
       _(added['username']).must_equal @another_account.username
     end
 
-    it 'SAD: should not approve a application without authorization ' do
+    it 'SAD AUTHORIZATION: should not approve a application without authorization ' do
       header 'AUTHORIZATION', auth_header(@account_data)
 
       req_data = { email: @account.email }

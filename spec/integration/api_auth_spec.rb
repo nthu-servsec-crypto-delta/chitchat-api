@@ -26,7 +26,7 @@ describe 'Test Authentication Routes' do
       _(account['email']).must_equal(@account_data['email'])
     end
 
-    it 'BAD: should not authenticate invalid password' do
+    it 'BAD AUTHENTICATION: should not authenticate invalid password' do
       credentials = { username: @account_data['username'],
                       password: 'fakepassword' }
 
@@ -38,7 +38,7 @@ describe 'Test Authentication Routes' do
       _(result['attributes']).must_be_nil
     end
 
-    it 'BAD: should sign when authenicating' do
+    it 'BAD DIGITAL_SIGNATURE: should sign when authenicating' do
       post 'api/v1/auth/authenticate', @account_data.to_json
       result = JSON.parse(last_response.body)
 
