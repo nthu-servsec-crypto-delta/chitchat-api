@@ -23,7 +23,7 @@ gem 'rbnacl', '~>7.1'
 
 # Database
 gem 'hirb'
-gem 'sequel', '~>5.55'
+gem 'sequel'
 group :development, :test do
   gem 'sequel-seed'
   gem 'sqlite3', '~>1.4'
@@ -38,6 +38,7 @@ group :test do
   gem 'minitest'
   gem 'minitest-rg'
   gem 'rack-test'
+  gem 'simplecov'
 end
 
 # Debugging

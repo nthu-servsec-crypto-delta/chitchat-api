@@ -55,7 +55,7 @@ describe 'Test Account Handling' do
       _(last_response.headers['Location']).must_be_nil
     end
 
-    it 'BAD: should sign request when creating account' do
+    it 'BAD DIGITAL_SIGNATURE: should sign request when creating account' do
       post 'api/v1/accounts', @account_data.to_json
 
       _(last_response.status).must_equal 403
