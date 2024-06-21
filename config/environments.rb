@@ -7,6 +7,7 @@ require 'logger'
 require './app/lib/secure_db'
 require './app/lib/auth_token'
 require './app/lib/sendgrid'
+require './app/lib/redis_cache'
 
 module ChitChat
   # Configuration for the API
@@ -45,6 +46,9 @@ module ChitChat
 
     # Load Email API
     SendGrid.setup(ENV.fetch('SENDGRID_APIKEY'), ENV.fetch('SENDGRID_SENDER'))
+
+    # Setup Redis connection
+    RedisCache.setup(config)
 
     configure :development, :test do
       require 'pry'

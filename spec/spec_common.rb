@@ -13,14 +13,13 @@ require 'yaml'
 
 require_relative 'app_test_loader'
 
-def wipe_database # rubocop:disable Metrics/AbcSize
+def wipe_database
   # Remove table with foreign constraints first
   app.DB.tables.sort_by { |table| -app.DB.foreign_key_list(table).length }.each do |table|
     app.DB[table].delete
   end
 
-  # Clear redis cache
-  ChitChat::Cache::Client.new(ChitChat::Api.config).wipe
+  RedisCache.wipe
 end
 
 def authenticate(account_data)

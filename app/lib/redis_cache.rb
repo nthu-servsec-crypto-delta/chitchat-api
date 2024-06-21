@@ -2,33 +2,29 @@
 
 require 'redis'
 
-module ChitChat
-  module Cache
-    # Redis client utility
-    class Client
-      def initialize(config)
-        @redis = Redis.new(url: config.REDIS_URL)
-      end
+# Redis Cache
+class RedisCache
+  def self.setup(config)
+    @redis = Redis.new(url: config.REDIS_URL)
+  end
 
-      def keys
-        @redis.keys
-      end
+  def self.keys
+    @redis.keys
+  end
 
-      def wipe
-        keys.each { |key| del(key) }
-      end
+  def self.wipe
+    keys.each { |key| del(key) }
+  end
 
-      def set(key, value)
-        @redis.set(key, value)
-      end
+  def self.set(key, value)
+    @redis.set(key, value)
+  end
 
-      def get(key)
-        @redis.get(key)
-      end
+  def self.get(key)
+    @redis.get(key)
+  end
 
-      def del(key)
-        @redis.del(key)
-      end
-    end
+  def self.del(key)
+    @redis.del(key)
   end
 end
