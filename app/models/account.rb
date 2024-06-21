@@ -39,11 +39,11 @@ module ChitChat
     end
 
     def location=(new_location)
-      Cache::Client.new(Api.config).set(username, new_location.to_json)
+      RedisCache.set(username, new_location.to_json)
     end
 
     def location
-      location_json = Cache::Client.new(Api.config).get(username)
+      location_json = RedisCache.get(username)
       location_json ? Location.from_json(location_json) : nil
     end
 
